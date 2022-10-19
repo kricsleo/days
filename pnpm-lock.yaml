@@ -8,6 +8,7 @@ specifiers:
   '@vitejs/plugin-vue': ^3.1.0
   '@vue/test-utils': ^2.0.2
   '@vueuse/core': ^9.3.0
+  date-fns: ^2.29.3
   eslint: ^8.24.0
   jsdom: ^20.0.0
   pnpm: ^7.12.2
@@ -25,6 +26,7 @@ specifiers:
 
 dependencies:
   '@vueuse/core': 9.3.0_vue@3.2.39
+  date-fns: 2.29.3
   vue: 3.2.39
   vue-router: 4.1.5_vue@3.2.39
 
@@ -1358,6 +1360,11 @@ packages:
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
