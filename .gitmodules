@@ -1,0 +1,3 @@
+[submodule "chinese-holidays-data"]
+	path = chinese-holidays-data
+	url = https://github.com/bastengao/chinese-holidays-data.git

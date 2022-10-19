@@ -1,43 +1,59 @@
-import { addDays, eachDayOfInterval } from 'date-fns'
 import { expect, test } from 'vitest'
-import { getNearbyDays, getPrevDays, getNextDays } from '../src/composables/days'
+import { getNearbyDays, isPeaceDay } from '../src/composables/days'
+import { holidays, isChineseHoliday, isChineseWorkingDay } from '../src/composables/chinese-holidays'
+import { isWeekend } from 'date-fns'
 
 const date = new Date(2022, 9, 19)
 
 test('days', () => {
-  expect(getNearbyDays(date, 1, 2)).toMatchInlineSnapshot(`
+  expect(getNearbyDays(date, 1, 1)).toMatchInlineSnapshot(`
+    Map {
+      2022-10-17T16:00:00.000Z => {
+        "current": false,
+        "peace": false,
+        "tip": "",
+        "today": false,
+        "work": true,
+      },
+      2022-10-18T16:00:00.000Z => {
+        "current": false,
+        "peace": false,
+        "tip": "",
+        "today": true,
+        "work": true,
+      },
+      2022-10-19T16:00:00.000Z => {
+        "current": false,
+        "peace": false,
+        "tip": "",
+        "today": false,
+        "work": true,
+      },
+    }
+  `)
+
+  expect(holidays.slice(0, 2)).toMatchInlineSnapshot(`
     [
-      2022-10-17T16:00:00.000Z,
-      2022-10-18T16:00:00.000Z,
-      2022-10-19T16:00:00.000Z,
-      2022-10-20T16:00:00.000Z,
+      {
+        "name": "元旦",
+        "range": [
+          "2016-01-01",
+          "2016-01-03",
+        ],
+        "type": "holiday",
+      },
+      {
+        "name": "春节",
+        "range": [
+          "2016-02-06",
+        ],
+        "type": "workingday",
+      },
     ]
   `)
 
-  expect(getPrevDays(date, 1)).toMatchInlineSnapshot(`
-    [
-      2022-10-17T16:00:00.000Z,
-    ]
-  `)
-
-  expect(getNextDays(date, 2)).toMatchInlineSnapshot(`
-    [
-      2022-10-19T16:00:00.000Z,
-      2022-10-20T16:00:00.000Z,
-    ]
-  `)
-
-  expect(addDays(date, -1)).toMatchInlineSnapshot('2022-10-17T16:00:00.000Z')
-
-  expect(eachDayOfInterval({
-    start: addDays(date, -1),
-    end: date
-  })).toMatchInlineSnapshot(`
-    [
-      2022-10-17T16:00:00.000Z,
-      2022-10-18T16:00:00.000Z,
-    ]
-  `)
-
-  expect(date.toLocaleString()).toMatchInlineSnapshot('"2022/10/19 上午12:00:00"')
+  expect(isPeaceDay(new Date('2022-10-08'))).toMatchInlineSnapshot('false')
+  expect(isChineseHoliday(new Date('2022-10-08'))).toMatchInlineSnapshot('false')
+  expect(isChineseWorkingDay(new Date('2022-10-08'))).toMatchInlineSnapshot('true')
+  expect(isWeekend(new Date('2022-10-08'))).toMatchInlineSnapshot('true')
 })
