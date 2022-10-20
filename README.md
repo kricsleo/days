@@ -2,8 +2,10 @@
 
 Schedule days online.
 
-## Feature
+## Features
 
-- Exclude weekends
-
-- Exclude chinese official holidays
+- [x] Exclude weekends
+- [x] Exclude Chinese official holiday
+- [ ] Select/Toggle start and end
+- [ ] Calculate the days between the start and end
+- [ ] Mark a day

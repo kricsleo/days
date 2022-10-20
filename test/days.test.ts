@@ -10,23 +10,29 @@ test('days', () => {
     Map {
       2022-10-17T16:00:00.000Z => {
         "current": false,
+        "marked": false,
         "peace": false,
+        "selected": false,
         "tip": "",
         "today": false,
         "work": true,
       },
       2022-10-18T16:00:00.000Z => {
         "current": false,
+        "marked": false,
         "peace": false,
+        "selected": false,
         "tip": "",
-        "today": true,
+        "today": false,
         "work": true,
       },
       2022-10-19T16:00:00.000Z => {
         "current": false,
+        "marked": false,
         "peace": false,
+        "selected": false,
         "tip": "",
-        "today": false,
+        "today": true,
         "work": true,
       },
     }

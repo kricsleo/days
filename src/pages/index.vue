@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
-import { days } from '~/composables/days';
+import { days, toggleSelect, toggleMark } from '~/composables/days';
 </script>
 
 <template>
   <div grid="~ cols-7 gap-2">
     <div
-      v-for="day in days.days.entries()"
+      v-for="[day, info] in days.days.entries()"
       :key="String(day)"
       h-20
-      :bg="day[1].current ? '~ #F8C6B5' : day[1].peace ? '~ #D4D3CA' : '~ #5AA4AE'"
-    >
-      {{ format(day[0], 'LLL/d') }}
+      :bg="info.current ? '~ #F8C6B5' : info.peace ? '~ #D4D3CA' : '~ #5AA4AE'"
+      :border="info.selected ? '~ 4px red' : ''"
+      @click="toggleSelect(day)"
+      @contextmenu.prevent="toggleMark(day)">
+      {{ format(day, 'LLL/d') }}
       <br />
-      {{day[1].tip}}
+      <button v-if="info.marked" i-carbon-star-filled text-red />
+      <!-- {{info.tip}} -->
     </div>
   </div>
 </template>

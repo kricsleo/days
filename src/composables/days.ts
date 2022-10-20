@@ -1,4 +1,4 @@
-import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isToday, isWeekend, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isAfter, isSameDay, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 interface Day {
@@ -6,6 +6,8 @@ interface Day {
   peace: boolean
   current: boolean
   today: boolean
+  selected: boolean
+  marked: boolean
   tip: string
 }
 
@@ -20,6 +22,7 @@ export const weeks = [
 ]
 
 const current = ref(new Date())
+
 const initPrevDays = computed(() => differenceInCalendarDays(
   current.value,
   startOfWeek(addWeeks(current.value, -2), { weekStartsOn: 1 }),
@@ -32,6 +35,49 @@ const initNextDays = computed(() => differenceInCalendarDays(
 export const days = reactive({
   days: getNearbyDays(current.value, initPrevDays.value, initNextDays.value),
 })
+
+const selectedDays = computed(() => 
+  new Map([...days.days.entries()].filter(([, info]) => info.selected))
+)
+const markedDays = computed(() => 
+new Map([...days.days.entries()].filter(([, info]) => info.marked))
+)
+
+export function toggleSelect(day: Date) {
+  const info  = days.days.get(day)!
+  const selectedDates = [...selectedDays.value.keys()]
+  if(info.selected) {
+    const hasPeriod = selectedDates.length > 1
+    if(hasPeriod) {
+      clearSelected()
+      info.selected = true
+    } else {
+      info.selected = false
+    }
+  } else {
+    const hasPeriodStart = selectedDates.length === 1
+    if(hasPeriodStart) {
+      days.days.forEach((info, date) => {
+        info.selected = isWithinInterval(date, {
+          start: min([selectedDates[0], day]),
+          end: max([selectedDates[0], day])
+        })
+      })
+    } else {
+      clearSelected()
+      info.selected = true
+    }
+  }
+}
+
+function clearSelected() {
+  days.days.forEach(info => info.selected = false)
+}
+
+export function toggleMark(day: Date) {
+  const info  = days.days.get(day)!
+  info.marked = !info.marked
+}
 
 export function getNearbyDays(current: Date, prev: number, next: number): Map<Date, Day> {
   const prevDays = getPrevDays(current, prev)
@@ -67,6 +113,8 @@ function getDay(day: Date): Day {
     today: isToday(day),
     work: isWorkingDay(day),
     peace: isPeaceDay(day),
+    selected: false,
+    marked: false,
     tip
   }
 }
