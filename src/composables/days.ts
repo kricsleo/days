@@ -1,7 +1,7 @@
 import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isAfter, isSameDay, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
-interface Day {
+export interface Day {
   work: boolean
   peace: boolean
   current: boolean
@@ -36,11 +36,17 @@ export const days = reactive({
   days: getNearbyDays(current.value, initPrevDays.value, initNextDays.value),
 })
 
-const selectedDays = computed(() => 
+export const selectedDays = computed(() => 
   new Map([...days.days.entries()].filter(([, info]) => info.selected))
 )
-const markedDays = computed(() => 
-new Map([...days.days.entries()].filter(([, info]) => info.marked))
+export const workingDays = computed(() => 
+  new Map(Array.from(selectedDays.value.entries()).filter(([, info]) => info.work))
+)
+export const peaceDays = computed(() => 
+  new Map(Array.from(selectedDays.value.entries()).filter(([, info]) => info.peace))
+)
+export const markedDays = computed(() => 
+  new Map([...days.days.entries()].filter(([, info]) => info.marked))
 )
 
 export function toggleSelect(day: Date) {
