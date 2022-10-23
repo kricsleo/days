@@ -63,12 +63,7 @@ export function toggleSelect(day: Date) {
   } else {
     const hasPeriodStart = selectedDates.length === 1
     if(hasPeriodStart) {
-      days.days.forEach((info, date) => {
-        info.selected = isWithinInterval(date, {
-          start: min([selectedDates[0], day]),
-          end: max([selectedDates[0], day])
-        })
-      })
+      selectPeriod(selectedDates[0], day)
     } else {
       clearSelected()
       info.selected = true
@@ -76,7 +71,16 @@ export function toggleSelect(day: Date) {
   }
 }
 
-function clearSelected() {
+export function selectPeriod(day1: Date, day2: Date) {
+  days.days.forEach((info, date) => {
+    info.selected = isWithinInterval(date, {
+      start: min([day1, day2]),
+      end: max([day1, day2])
+    })
+  })
+}
+
+export function clearSelected() {
   days.days.forEach(info => info.selected = false)
 }
 
