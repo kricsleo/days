@@ -1,6 +1,6 @@
 <template>
-  <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200">
+  <main font-sans text="gray-700 dark:gray-200" dark:bg-dark>
+    <Header />
     <router-view />
-    <Footer />
   </main>
 </template>

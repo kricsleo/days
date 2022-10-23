@@ -6,6 +6,16 @@ body,
   padding: 0;
 }
 
-html.dark {
-  background: #121212;
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 999rem;
+  background-color: rgba(49, 52, 56, 0.12);
 }

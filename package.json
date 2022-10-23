@@ -11,6 +11,7 @@
     "up": "taze major -I"
   },
   "dependencies": {
+    "@kricsleo/observer": "^0.1.11",
     "@vueuse/core": "^9.3.0",
     "date-fns": "^2.29.3",
     "vue": "^3.2.39",

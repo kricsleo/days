@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@antfu/eslint-config': ^0.27.0
   '@iconify-json/carbon': ^1.1.8
+  '@kricsleo/observer': ^0.1.11
   '@types/node': ^18.7.23
   '@unocss/reset': ^0.45.25
   '@vitejs/plugin-vue': ^3.1.0
@@ -25,6 +26,7 @@ specifiers:
   vue-tsc: ^0.40.13
 
 dependencies:
+  '@kricsleo/observer': 0.1.11
   '@vueuse/core': 9.3.0_vue@3.2.39
   date-fns: 2.29.3
   vue: 3.2.39
@@ -304,6 +306,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@kricsleo/observer/0.1.11:
+    resolution: {integrity: sha512-lNNsMLO13bTVxcpmQQzd7+CrFcPUm7HQ/Xel5Jr/GRpupR53WKAWvIV+l7NenI8FLvuD4VvZaTrP5+TNkwfhqQ==}
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
