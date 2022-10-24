@@ -21,18 +21,18 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
     ref="nodeRef"
     :id="info.id"
     h-20
-    :bg="info.selected ? info.peace ? ' ~ red-1' : '~ red' 
-        : info.peace ? '~ green-1' : '~ green-3'"
+    :bg="info.selected ? info.peace ? ' ~ red-200' : '~ red-400' 
+        : info.peace ? '~ green-50' : '~ green-200'"
     rounded-2
     grid="~ rows-3"
+    justify-items-center
+    items-center
     cursor-pointer
-    text-center
     select-none
     @click="toggleSelect(day)"
-    py-2
     @contextmenu.prevent="toggleMark(day)">
-    <span text-xs>{{ format(day, 'MMM').toUpperCase() }}</span>
-    <span font-bold text-2xl>{{ format(day, 'd') }}</span>
+    <span text-xs leading-none>{{ format(day, 'MMM').toUpperCase() }}</span>
+    <span font-bold text-2xl leading-none>{{ format(day, 'd') }}</span>
     <button ref="home" v-if="info.current" i-carbon-home />
     <button v-if="info.marked" i-carbon-star-filled text-orange />
   </div>

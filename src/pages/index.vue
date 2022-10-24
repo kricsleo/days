@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <div grid="~ cols-[1fr_4fr_1fr]">
+  <div grid="~ cols-[1fr_4fr_1fr] gap-5">
     <div grid="col-start-2 col-end-2">
       <Calender />
     </div>

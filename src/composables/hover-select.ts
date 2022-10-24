@@ -14,7 +14,16 @@ watch([pressedDay, hoveredDay], () => {
     if(arrowLine) {
       arrowLine.update({source: `#${sourceId}`, destination: `#${targetId}`})
     } else {
-      arrowLine = new ArrowLine(`#${sourceId}`, `#${targetId}`, {curvature: 0, endpoint: {type: 'circles' }, style: 'dot'})
+      arrowLine = new ArrowLine(
+        `#${sourceId}`, 
+        `#${targetId}`, 
+        {
+          curvature: 0, 
+          endpoint: {type: 'circles' }, 
+          style: 'dot',
+          color: '#7f1d1d'
+        }
+      )
     }
   } else if (!pressedDay.value){
     arrowLine?.remove()
