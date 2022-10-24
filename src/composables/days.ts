@@ -1,7 +1,8 @@
-import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isAfter, isSameDay, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 export interface Day {
+  id: string
   work: boolean
   peace: boolean
   current: boolean
@@ -119,6 +120,7 @@ function getDay(day: Date): Day {
     ? `补班(${chineseDay.name})`
     : '' : ''
   return {
+    id: `day_${day.valueOf()}`,
     current: current.value === day,
     today: isToday(day),
     work: isWorkingDay(day),

@@ -19,6 +19,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
 <template>
   <div
     ref="nodeRef"
+    :id="info.id"
     h-20
     :bg="info.selected ? info.peace ? ' ~ red-1' : '~ red' 
         : info.peace ? '~ green-1' : '~ green-3'"
