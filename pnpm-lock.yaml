@@ -9,7 +9,6 @@ specifiers:
   '@vitejs/plugin-vue': ^3.1.2
   '@vue/test-utils': ^2.2.0
   '@vueuse/core': ^9.3.1
-  arrow-line: ^0.7.5
   date-fns: ^2.29.3
   eslint: ^8.26.0
   jsdom: ^20.0.1
@@ -29,7 +28,6 @@ specifiers:
 dependencies:
   '@kricsleo/observer': 0.1.11
   '@vueuse/core': 9.3.1_vue@3.2.41
-  arrow-line: 0.7.5
   date-fns: 2.29.3
   vue: 3.2.41
   vue-router: 4.1.5_vue@3.2.41
@@ -1088,10 +1086,6 @@ packages:
       es-abstract: 1.20.4
       es-shim-unscopables: 1.0.0
     dev: true
-
-  /arrow-line/0.7.5:
-    resolution: {integrity: sha512-Ib/HNbADhyXdqQzis9Y2En0o6sHMTiykdeqUCLaOZriGv3OaECU7oDMxLieWkBuP1/zbIjODDUyrE0J1pMcnLA==}
-    dev: false
 
   /assertion-error/1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
