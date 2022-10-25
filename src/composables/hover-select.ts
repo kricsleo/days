@@ -1,6 +1,6 @@
 import { clearSelected, days, selectPeriod } from './days'
 // @ts-ignore
-import * as ArrowLine from 'arrow-line'
+import ArrowLine from 'arrow-line'
 
 export const pressedDay = ref<Date>()
 export const hoveredDay = ref<Date>()
