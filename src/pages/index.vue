@@ -7,10 +7,8 @@
 </script>
 
 <template>
-  <div grid="~ cols-[1fr_4fr_1fr] gap-5">
-    <div grid="col-start-2 col-end-2">
-      <Calender />
-    </div>
+  <div grid="~ cols-[1fr_60vw_1fr] gap-5">
+    <Calender col-start-2 />
     <Sidebar />
   </div>
 </template>

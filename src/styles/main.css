@@ -6,16 +6,20 @@ body,
   padding: 0;
 }
 
-body::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-body::-webkit-scrollbar-corner {
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
   background-color: transparent;
 }
 
-body::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   border-radius: 999rem;
-  background-color: rgba(49, 52, 56, 0.12);
+  background-color: rgba(107, 114, 128, 0.5);
 }

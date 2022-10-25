@@ -33,7 +33,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
     @contextmenu.prevent="toggleMark(day)">
     <span text-xs leading-none>{{ format(day, 'MMM').toUpperCase() }}</span>
     <span font-bold text-2xl leading-none>{{ format(day, 'd') }}</span>
-    <button ref="home" v-if="info.current" i-carbon-home />
+    <button ref="home" v-if="info.current" i-carbon-home text-orange />
     <button v-if="info.marked" i-carbon-star-filled text-orange />
   </div>
 </template>

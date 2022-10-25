@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { workingDays, peaceDays, selectedDays } from '~/composables/days'
+  import { workingDays, peaceDays, selectedDays, backHome } from '~/composables/days'
 </script>
 
 <template>
@@ -18,5 +18,7 @@
       {{selectedDays.size}}
       <span z--1 absolute left-13 bottom-0 text="~ 8 gray-300" italic op-35>Total</span>
     </div>
+
+    <button i-carbon-home @click="backHome" />
   </div>
 </template>

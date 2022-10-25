@@ -13,23 +13,23 @@ export interface Day {
 }
 
 export const weeks = [
-  { name: 'Mon' },
-  { name: 'Tue' },
-  { name: 'Wed' },
-  { name: 'Thu' },
-  { name: 'Fri' },
-  { name: 'Sat' },
-  { name: 'Sun' },
+  { name: 'Mo', peace: false },
+  { name: 'Tu', peace: false },
+  { name: 'We', peace: false},
+  { name: 'Th', peace: false },
+  { name: 'Fr', peace: false },
+  { name: 'Sa', peace: true },
+  { name: 'Su', peace: true },
 ]
 
-const current = ref(new Date())
+export const current = ref(new Date())
 
 const initPrevDays = computed(() => differenceInCalendarDays(
   current.value,
-  startOfWeek(addWeeks(current.value, -2), { weekStartsOn: 1 }),
+  startOfWeek(addWeeks(current.value, -12), { weekStartsOn: 1 }),
 ))
 const initNextDays = computed(() => differenceInCalendarDays(
-  endOfWeek(addWeeks(current.value, 7), { weekStartsOn: 1 }),
+  endOfWeek(addWeeks(current.value, 24), { weekStartsOn: 1 }),
   current.value,
 ))
 
@@ -90,6 +90,18 @@ export function toggleMark(day: Date) {
   info.marked = !info.marked
 }
 
+export function addNextDays(count: number) {
+  const lastDay = [...days.days][days.days.size - 1][0]
+  const nextDays = getNextDays(lastDay, count)
+  days.days = new Map([...days.days, ...nextDays])
+}
+
+export function addPrevDays(count: number) {
+  const firstDay = [...days.days][0][0]
+  const prevDays = getPrevDays(firstDay, count)
+  days.days = new Map([...prevDays, ...days.days])
+}
+
 export function getNearbyDays(current: Date, prev: number, next: number): Map<Date, Day> {
   const prevDays = getPrevDays(current, prev)
   const nextDays = getNextDays(current, next)
@@ -110,6 +122,11 @@ export function getNextDays(current: Date, next: number): Map<Date, Day> {
     end: addDays(current, next),
   })
   return new Map(days.map(day => [day, getDay(day)]))
+}
+
+export function backHome() {
+  const homeDayNode = document.getElementById(days.days.get(current.value)!.id)
+  homeDayNode?.scrollIntoView({ block: 'center'})
 }
 
 function getDay(day: Date): Day {
