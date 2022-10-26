@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     CalenderDay: typeof import('./src/components/CalenderDay.vue')['default']
     Footer: typeof import('./src/components/Footer.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
+    InputHours: typeof import('./src/components/InputHours.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']

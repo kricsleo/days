@@ -50,6 +50,10 @@ export const markedDays = computed(() =>
   new Map([...days.days.entries()].filter(([, info]) => info.marked))
 )
 
+export const hoursPerDay = ref(8)
+
+export const totalHours = computed(() => workingDays.value.size * hoursPerDay.value)
+
 export function toggleSelect(day: Date) {
   const info  = days.days.get(day)!
   const selectedDates = [...selectedDays.value.keys()]
