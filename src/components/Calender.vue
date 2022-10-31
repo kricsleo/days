@@ -26,8 +26,7 @@ onMounted(() => {
 
 <template>
   <div h-screen flex="~ col">
-    <div px-2 py-2 border-b
-    bg-white dark:bg-dark grid="~ cols-7 gap-2" justify-items-center>
+    <div px-2 py-2 border-b grid="~ cols-7 gap-2" justify-items-center>
       <h5 v-for="week in weeks" :key="week.name">{{week.name}}</h5>
     </div>
     <div grow-1 overflow-auto ref="container" pl-3 pr-2>
