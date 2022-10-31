@@ -11,9 +11,12 @@ onMounted(() => backHome())
 onMounted(() => {
   observerManager.registerObserver('loader', {
     root: container.value,
-    // rootMargin: '30% 0px 30% 0px',
   });
-  observerManager.observe('loader', prevLoader.value!, () => addPrevDays(14))
+  observerManager.observe('loader', prevLoader.value!, () => {
+    addPrevDays(14)
+    // scroll down a litte so that prev loader can be triggerred again
+    container.value!.scrollTop = 10
+  })
   observerManager.observe('loader', nextLoader.value!, () => addNextDays(14))
   return () => {
     observerManager.deleteObserver('loader')
@@ -22,18 +25,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="container" h-90vh overflow-auto px-4>
-    <div sticky top-0 py-2 bg-white dark:bg-dark grid="~ cols-7 gap-2" justify-items-center>
+  <div h-screen flex="~ col">
+    <div px-2 py-2 border-b
+    bg-white dark:bg-dark grid="~ cols-7 gap-2" justify-items-center>
       <h5 v-for="week in weeks" :key="week.name">{{week.name}}</h5>
     </div>
-    <div h-1px ref="prevLoader" />
-    <div grid="~ cols-7 gap-2">
-      <CalenderDay
-        v-for="[day, info] in days.days.entries()"
-        :key="info.id"
-        :day="day"
-        :info="info" />
+    <div grow-1 overflow-auto ref="container" pl-3 pr-2>
+      <div h-1px ref="prevLoader" />
+      <div grid="~ cols-7 gap-2">
+        <CalenderDay
+          v-for="[day, info] in days.days.entries()"
+          :key="info.id"
+          :day="day"
+          :info="info" />
+      </div>
+      <div h-1px ref="nextLoader" />
     </div>
-    <div h-1px ref="nextLoader" />
   </div>
 </template>

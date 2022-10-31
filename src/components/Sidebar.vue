@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div flex="~ col gap-3" items-stretch>
+  <div flex="~ col gap-3" items-stretch text-center>
     <div relative leading-18 text="~ 20 red center" font-bold>
       {{workingDays.size}}
       <span z--1 absolute bottom-0 left-1 text="~ 12 red-300 center" italic op-35>Working</span>
