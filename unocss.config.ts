@@ -28,7 +28,11 @@ export default defineConfig({
     colors: {
       dark: '#121212'
     }
-  }
+  },
+  shortcuts: [
+    [/^border(.*)$/, ([, position]) => `border${position} border-gray-200/50`],
+    [/^wh-(.*)$/, ([, size]) => `w-${size} h-${size}`],
+  ]
   // transformers: [
   //   transformerDirectives(),
   //   transformerVariantGroup(),

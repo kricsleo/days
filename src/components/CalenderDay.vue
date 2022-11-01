@@ -21,8 +21,8 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
     ref="nodeRef"
     :id="info.id"
     h-20
-    :bg="info.selected ? info.peace ? ' ~ red-200' : '~ red-400' 
-        : info.peace ? '~ green-50' : '~ green-200'"
+    :text="info.selected ? info.peace ? ' red-200' : 'red-400' 
+        : info.peace ? 'green-50' : 'green-200'"
     rounded-2
     grid="~ rows-3"
     justify-items-center

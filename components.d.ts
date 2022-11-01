@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     InputHours: typeof import('./src/components/InputHours.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScheduledCard: typeof import('./src/components/ScheduledCard.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
   }
 }

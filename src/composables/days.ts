@@ -1,4 +1,4 @@
-import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isSameDay, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 export interface Day {
@@ -37,52 +37,93 @@ export const days = reactive({
   days: getNearbyDays(current.value, initPrevDays.value, initNextDays.value),
 })
 
-export const selectedDays = computed(() => 
-  new Map([...days.days.entries()].filter(([, info]) => info.selected))
-)
-export const workingDays = computed(() => 
-  new Map(Array.from(selectedDays.value.entries()).filter(([, info]) => info.work))
-)
-export const peaceDays = computed(() => 
-  new Map(Array.from(selectedDays.value.entries()).filter(([, info]) => info.peace))
-)
-export const markedDays = computed(() => 
-  new Map([...days.days.entries()].filter(([, info]) => info.marked))
-)
+export const start = ref<Date>()
+export const end = ref<Date>()
+export const planId = ref<string>()
 
-export const hoursPerDay = ref(8)
+export const plans = reactive<Map<string, [Date?, Date?]>>(new Map())
 
-export const totalHours = computed(() => workingDays.value.size * hoursPerDay.value)
+export function addPlan(start: Date, end: Date) {
+  const id = Date.now().toString()
+  plans.set(id, [start, end])
+}
+
+export function deletePlan(id: string) {
+  plans.delete(id)
+}
+
+export function usePlan(id: string) {
+  [start.value, end.value] = plans.get(id)!
+  planId.value = id
+}
+
+watch([start, end], () => {
+  clearSelected()
+  selectPeriod(start.value, end.value)
+  if(planId.value) {
+    plans.set(planId.value, [start.value, end.value])
+  }
+})
 
 export function toggleSelect(day: Date) {
-  const info  = days.days.get(day)!
-  const selectedDates = [...selectedDays.value.keys()]
-  if(info.selected) {
-    const hasPeriod = selectedDates.length > 1
-    if(hasPeriod) {
-      clearSelected()
-      info.selected = true
+  if(start.value && end.value) {
+    const isInPlan = isWithinInterval(day, {
+      start: start.value,
+      end: end.value
+    })
+    if(isInPlan) {
+      if(start.value === end.value) {
+        start.value = end.value = undefined
+      } else {
+        start.value = end.value = day
+      }
     } else {
-      info.selected = false
+      if(start.value === end.value) {
+        end.value = max([day, start.value])
+        start.value = min([day, start.value])
+      } else {
+        start.value = end.value = day
+      }
     }
   } else {
-    const hasPeriodStart = selectedDates.length === 1
-    if(hasPeriodStart) {
-      selectPeriod(selectedDates[0], day)
-    } else {
-      clearSelected()
-      info.selected = true
-    }
+    start.value = end.value = day
   }
 }
 
-export function selectPeriod(day1: Date, day2: Date) {
-  days.days.forEach((info, date) => {
-    info.selected = isWithinInterval(date, {
-      start: min([day1, day2]),
-      end: max([day1, day2])
+// export function toggleSelect(day: Date) {
+//   const info  = days.days.get(day)!
+//   const selectedDates = [...selectedDays.value.keys()]
+//   if(info.selected) {
+//     const hasPeriod = selectedDates.length > 1
+//     if(hasPeriod) {
+//       clearSelected()
+//       info.selected = true
+//     } else {
+//       info.selected = false
+//     }
+//   } else {
+//     const hasPeriodStart = selectedDates.length === 1
+//     if(hasPeriodStart) {
+//       selectPeriod(selectedDates[0], day)
+//     } else {
+//       clearSelected()
+//       info.selected = true
+//     }
+//   }
+// }
+
+export function selectPeriod(day1?: Date, day2?: Date) {
+  if(day1 && day2) {
+    days.days.forEach((info, date) => {
+      info.selected = isWithinInterval(date, {
+        start: min([day1, day2]),
+        end: max([day1, day2])
+      })
     })
-  })
+  } else if(day1 || day2) {
+    const day = (day1 || day2)!
+    days.days.get(day)!.selected = true
+  }
 }
 
 export function clearSelected() {
@@ -133,7 +174,7 @@ export function backHome() {
   homeDayNode?.scrollIntoView({ block: 'center'})
 }
 
-function getDay(day: Date): Day {
+export function getDay(day: Date): Day {
   const chineseDay = findChineseDay(day)
   const tip = chineseDay ? chineseDay.type === 'holiday' 
     ? chineseDay.name
