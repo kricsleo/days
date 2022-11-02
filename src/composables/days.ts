@@ -12,6 +12,12 @@ export interface Day {
   tip: string
 }
 
+export interface Plan {
+  start?: Date
+  end?: Date
+  note?: string
+}
+
 export const weeks = [
   { name: 'Mo', peace: false },
   { name: 'Tu', peace: false },
@@ -39,30 +45,39 @@ export const days = reactive({
 
 export const start = ref<Date>()
 export const end = ref<Date>()
-export const planId = ref<string>()
+export const planId = ref(Date.now().toString())
 
-export const plans = reactive<Map<string, [Date?, Date?]>>(new Map())
+export const plans = reactive<Map<string, Plan>>(new Map(
+  [[planId.value, {
+    start: start.value,
+    end: end.value,
+    note: ''
+  }]]
+))
 
-export function addPlan(start: Date, end: Date) {
+export function addPlan(plan: Plan) {
   const id = Date.now().toString()
-  plans.set(id, [start, end])
+  plans.set(id, plan)
 }
 
 export function deletePlan(id: string) {
   plans.delete(id)
+  id === planId.value && (planId.value = [...plans.keys()][0])
 }
 
 export function usePlan(id: string) {
-  [start.value, end.value] = plans.get(id)!
   planId.value = id
+  const plan = plans.get(id)!
+  start.value = plan.start
+  end.value = plan.end
 }
 
 watch([start, end], () => {
   clearSelected()
   selectPeriod(start.value, end.value)
-  if(planId.value) {
-    plans.set(planId.value, [start.value, end.value])
-  }
+  const plan = plans.get(planId.value)!
+  plan.start = start.value
+  plan.end = end.value
 })
 
 export function toggleSelect(day: Date) {

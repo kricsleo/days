@@ -1,6 +1,10 @@
 <script setup lang="ts">
-  import { backHome, start, end, plans, planId } from '~/composables/days'
-  
+  import { backHome, plans, planId } from '~/composables/days'
+  const planList = computed(() => {
+    const list = [...plans.entries()]
+    const orderedList = [list.shift()!, ...list.reverse()]
+    return orderedList
+  })
 </script>
 
 <template>
@@ -11,14 +15,13 @@
       <!-- <InputHours v-model="hoursPerDay" /> -->
       hours a day.
     </div>
-    
-    <ScheduledCard :start="start" :end="end" :using="!planId" :useable="plans.size !== 0" />
-    <ScheduledCard 
-      v-for="[id, [start, end]] in [...plans.entries()].reverse()" 
-      :key="id"
-      :planId="id"
-      :start="start"
-      :using="planId === id"
-      :end="end" />
+
+    <section overflow-auto>
+      <ScheduledCard 
+        v-for="([id], idx) in planList" 
+        :key="id"
+        :planId="id"
+        :deletable="idx !== 0" />
+    </section>
   </div>
 </template>

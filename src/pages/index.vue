@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { backHome, plans } from '~/composables/days'
+const planList = computed(() => {
+  const list = [...plans.entries()]
+  const orderedList = [list.shift()!, ...list.reverse()]
+  return orderedList
+})
 // import { observerManager } from '@kricsleo/observer'
 // const homeRef = ref<HTMLElement>()
 // function backHome() {
@@ -9,9 +15,16 @@
 <template>
   <div grid="~ cols-2">
     <Calender />
-    <div border="l gray-200/50">
+    <div h-screen flex="~ col" border="l gray-200/50">
       <Header />
-      <Sidebar />
+      <button i-carbon-home @click="backHome" m-2 text-3xl />
+      <section border-t grow-1 overflow-auto>
+        <ScheduledCard 
+          v-for="([id], idx) in planList" 
+          :key="id"
+          :planId="id"
+          :deletable="idx !== 0" />
+      </section>
     </div>
   </div>
 </template>
