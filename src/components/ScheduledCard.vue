@@ -25,7 +25,7 @@ const inputRef = ref<HTMLInputElement>()
 </script>
 
 <template>
-  <section @click="usePlan(planId)" p-2 border-b :class="{'bg-gray-200/20': using}">
+  <section @click="usePlan(planId)" p-2 border-b :class="{'bg-zinc/50': using}">
     <div flex items-center>
       <div i-carbon:calendar-heat-map mr-2 />
       <h5 v-if="plan.start && plan.end" flex items-center>
@@ -33,12 +33,13 @@ const inputRef = ref<HTMLInputElement>()
         <div v-if="plan.start !== plan.end" i-carbon:direction-straight-right mx-1 />
         <span v-if="plan.start !== plan.end">{{format(plan.end, 'MM.dd')}}</span>
       </h5>
-      <div ml-auto text-xl flex items-center>
+      <div ml-auto text-2xl flex items-center>
         <button v-if="!deletable" i-carbon:add @click="addPlan({...plan})" title="Add this plan." />
         <button v-if="deletable" i-carbon:close @click="deletePlan(planId)" title="Remove this plan!" />
       </div>
     </div>
-    <div flex items-center mt-2>
+
+    <div flex items-center mt-2 mb-4>
       <label :for="`input_${planId}`" i-carbon:pen class="mr-2" />
       <input 
         ref="inputRef"
@@ -49,23 +50,26 @@ const inputRef = ref<HTMLInputElement>()
         @keyup.enter="inputRef?.blur()"
         bg-transparent outline-none w-50 />
     </div>
-    <div flex items-center gap-2 mt-2>
-      <div wh-15 text-3xl rounded-2 bg-red flex items-center justify-center>
-        <div i-carbon:face-pending-filled />
-      </div>
-      <div mt-1>
-        <div>{{workingDays}}</div>
-        <div op-60>Working days</div>
-      </div>
-    </div>
 
-    <div flex items-center gap-2 mt-2>
-      <div wh-15 text-3xl rounded-2 bg-green flex items-center justify-center>
-        <div i-carbon:face-wink-filled />
+    <div flex gap-10>
+      <div flex items-stretch gap-2>
+        <div wh-15 text-3xl rounded-2 bg-rose flex items-center justify-center text-white>
+          <div i-carbon:face-dizzy />
+        </div>
+        <div>
+          <div font-bold text-4xl text-rose>{{workingDays}}</div>
+          <div op-60>Working days</div>
+        </div>
       </div>
-      <div mt-1>
-        <div>{{peaceDays}}</div>
-        <div op-60>Peace days</div>
+
+      <div flex items-stretch gap-2>
+        <div wh-15 text-3xl rounded-2 bg-green-6 flex items-center justify-center text-white>
+          <div i-carbon:face-cool />
+        </div>
+        <div flex="~ col" justify-between>
+          <div text-2xl>{{peaceDays}}</div>
+          <div op-60>Peace days</div>
+        </div>
       </div>
     </div>
   </section>

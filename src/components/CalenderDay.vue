@@ -22,22 +22,22 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
   <div
     ref="nodeRef"
     :id="info.id"
-    :text="info.selected ? info.peace ? 'gray-2' : 'white-4'
-      : info.peace ? 'gray' : 'red-2'"
-    :bg="info.selected ? 'red-4' : ''"
-    :op="info.peace ? '50' : ''"
-    :class="{'rounded-lt-4': isStart, 'rounded-rb-4': isEnd, 'rounded-4': isStart && isEnd}"
+    :text="info.selected ? info.peace ? 'gray-1/30' : 'white'
+      : info.peace ? 'gray/50 dark:gray-2/50' : 'rose-4'"
+    :class="[{
+      'bg-rose-4': info.selected,
+      'rounded-lt-4': isStart, 
+      'rounded-rb-4': isEnd, 
+      'rounded-4': isStart && isEnd
+    }]"
     h-15
-    flex="~ col"
-    justify-center
-    items-center
+    flex="~ col" justify-center items-center
     cursor-pointer
     select-none
     @click="toggleSelect(day)"
     @contextmenu.prevent="toggleMark(day)">
     <span text-xs leading-none mb-1>{{ format(day, 'MMM').toUpperCase() }}</span>
-    <span font-bold text-2xl leading-none>{{ format(day, 'd') }}</span>
-    <button ref="home" v-if="info.current" i-carbon-home text-orange />
+    <span font-bold text-2xl leading-none wh-7 flex items-center justify-center :class="{'outline': info.current}" rounded-full>{{ format(day, 'd') }}</span>
     <button v-if="info.marked" i-carbon-star-filled text-orange />
   </div>
 </template>

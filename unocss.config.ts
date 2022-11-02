@@ -30,7 +30,7 @@ export default defineConfig({
     }
   },
   shortcuts: [
-    [/^border(.*)$/, ([, position]) => `border${position} border-gray-200/50`],
+    [/^border(.*)$/, ([, position]) => `border-gray-200/50 border${position}`],
     [/^wh-(.*)$/, ([, size]) => `w-${size} h-${size}`],
   ]
   // transformers: [

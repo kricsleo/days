@@ -1,4 +1,4 @@
-import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isSameDay, isToday, isWeekend, isWithinInterval, max, min, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isSameDay, isToday, isWeekend, isWithinInterval, max, min, previousSunday, startOfDay, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 export interface Day {
@@ -28,7 +28,7 @@ export const weeks = [
   { name: 'Su', peace: true },
 ]
 
-export const current = ref(new Date())
+export const current = ref(startOfDay(new Date()))
 
 const initPrevDays = computed(() => differenceInCalendarDays(
   current.value,
@@ -78,6 +78,10 @@ watch([start, end], () => {
   const plan = plans.get(planId.value)!
   plan.start = start.value
   plan.end = end.value
+})
+
+watch(planId, () => {
+  start.value && focusDay(start.value)
 })
 
 export function toggleSelect(day: Date) {
@@ -184,9 +188,14 @@ export function getNextDays(current: Date, next: number): Map<Date, Day> {
   return new Map(days.map(day => [day, getDay(day)]))
 }
 
-export function backHome() {
-  const homeDayNode = document.getElementById(days.days.get(current.value)!.id)
-  homeDayNode?.scrollIntoView({ block: 'center'})
+export function focusDay(day: Date) {
+  const targetId = getDay(previousSunday(day)).id
+  const targetDayNode = document.getElementById(targetId)
+  targetDayNode?.scrollIntoView()
+}
+
+export function focusToday() {
+  focusDay(current.value)
 }
 
 export function getDay(day: Date): Day {

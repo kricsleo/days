@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { backHome, days, weeks, addPrevDays, addNextDays } from '~/composables/days';
+import { days, weeks, focusToday, addPrevDays, addNextDays } from '~/composables/days';
 import { observerManager } from '@kricsleo/observer'
 
 const prevLoader = ref<HTMLElement>()
 const nextLoader = ref<HTMLElement>()
 const container = ref<HTMLElement>()
 
-onMounted(() => backHome())
+onMounted(() => focusToday())
 
 onMounted(() => {
   observerManager.registerObserver('loader', {
@@ -26,8 +26,13 @@ onMounted(() => {
 
 <template>
   <div h-screen flex="~ col">
-    <div px-2 py-2 border="b gray-200/50" grid="~ cols-7 gap-2" justify-items-center>
-      <h5 v-for="week in weeks" :key="week.name">{{week.name}}</h5>
+    <div px-3 py-2 border="b gray-200/50" grid="~ cols-7" justify-items-center>
+      <h5 
+        v-for="week in weeks" 
+        :key="week.name" 
+        :op="week.peace ? '60' : ''">
+        {{week.name}}
+      </h5>
     </div>
     <div grow-1 overflow-auto ref="container" pl-3 pr-2>
       <div h-1px ref="prevLoader" />

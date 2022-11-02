@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { backHome, plans } from '~/composables/days'
+import { focusToday, plans } from '~/composables/days'
 const planList = computed(() => {
   const list = [...plans.entries()]
   const orderedList = [list.shift()!, ...list.reverse()]
@@ -13,12 +13,14 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-2">
+  <div grid="~ cols-2" w-230 mx-auto border-x>
     <Calender />
     <div h-screen flex="~ col" border="l gray-200/50">
       <Header />
-      <button i-carbon-home @click="backHome" m-2 text-3xl />
-      <section border-t grow-1 overflow-auto>
+      <div p-2 flex items-center justify-center text-2xl>
+        <button i-carbon:circle-filled @click="focusToday" title="Go Today!" />
+      </div>
+      <section grow-1 overflow-auto>
         <ScheduledCard 
           v-for="([id], idx) in planList" 
           :key="id"
