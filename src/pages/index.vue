@@ -13,7 +13,7 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-2" w-230 mx-auto border-x>
+  <div grid="~ cols-2" max-w-260 mx-auto border-x>
     <Calender />
     <div h-screen flex="~ col" border="l gray-200/50">
       <Header />

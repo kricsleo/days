@@ -62,7 +62,9 @@ export function addPlan(plan: Plan) {
 
 export function deletePlan(id: string) {
   plans.delete(id)
-  id === planId.value && (planId.value = [...plans.keys()][0])
+  if(id === planId.value) {
+    planId.value = [...plans.keys()][0]
+  }
 }
 
 export function usePlan(id: string) {

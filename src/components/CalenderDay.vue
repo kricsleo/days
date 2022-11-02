@@ -30,14 +30,14 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
       'rounded-rb-4': isEnd, 
       'rounded-4': isStart && isEnd
     }]"
-    h-15
+    h-18
     flex="~ col" justify-center items-center
     cursor-pointer
     select-none
     @click="toggleSelect(day)"
     @contextmenu.prevent="toggleMark(day)">
-    <span text-xs leading-none mb-1>{{ format(day, 'MMM').toUpperCase() }}</span>
+    <span text-xs leading-none>{{ format(day, 'MMM').toUpperCase() }}</span>
     <span font-bold text-2xl leading-none wh-7 flex items-center justify-center :class="{'outline': info.current}" rounded-full>{{ format(day, 'd') }}</span>
-    <button v-if="info.marked" i-carbon-star-filled text-orange />
+    <button v-if="info.marked" i-carbon-star-filled text-yellow />
   </div>
 </template>
