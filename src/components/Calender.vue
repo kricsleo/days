@@ -31,7 +31,7 @@ onMounted(() => {
     </div>
     <div grow-1 overflow-auto ref="container" pl-3 pr-2>
       <div h-1px ref="prevLoader" />
-      <div grid="~ cols-7 gap-2">
+      <div grid="~ cols-7">
         <CalenderDay
           v-for="[day, info] in days.days.entries()"
           :key="info.id"
