@@ -37,7 +37,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
     @click="toggleSelect(day)"
     @contextmenu.prevent="toggleMark(day)">
     <span text-xs leading-none>{{ format(day, 'MMM').toUpperCase() }}</span>
-    <span font-bold text-2xl leading-none wh-7 flex items-center justify-center :class="{'outline': info.current}" rounded-full>{{ format(day, 'd') }}</span>
+    <span font-bold text-2xl leading-none wh-7 flex items-center justify-center :class="{'outline': info.current}" rounded-full my-1>{{ format(day, 'd') }}</span>
     <button v-if="info.marked" i-carbon-star-filled text-yellow />
   </div>
 </template>
