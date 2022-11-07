@@ -22,22 +22,25 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.day : undefined)
   <div
     ref="nodeRef"
     :id="info.id"
-    :text="info.selected ? info.peace ? 'gray-1/30' : 'white'
-      : info.peace ? 'gray/50 dark:gray-2/50' : 'rose-4'"
+    :text="info.selected ? info.peace ? 'gray-1/50' : 'white'
+      : info.peace ? 'gray/50 dark:gray-2/50' : 'red'"
+    text-2xl
     :class="[{
-      'bg-rose-4': info.selected,
-      'rounded-lt-4': isStart, 
-      'rounded-rb-4': isEnd, 
-      'rounded-4': isStart && isEnd
+      'bg-red': info.selected,
+      'rounded-l-full': isStart, 
+      'rounded-r-full': isEnd,
     }]"
-    h-18
     flex="~ col" justify-center items-center
+    wh-14
     cursor-pointer
     select-none
     @click="toggleSelect(day)"
     @contextmenu.prevent="toggleMark(day)">
-    <span text-xs leading-none>{{ format(day, 'MMM').toUpperCase() }}</span>
-    <span font-bold text-2xl leading-none wh-7 flex items-center justify-center :class="{'outline': info.current}" rounded-full my-1>{{ format(day, 'd') }}</span>
+    <div v-if="info.current" i-carbon:location-person-filled text-3xl color-yellow />
+    <template v-else>
+      <span leading-none text-sm scale-70>{{ info.tip || format(day, 'MMM').toUpperCase() }}</span>
+      <span leading-none font-bold>{{ format(day, 'd') }}</span>
+    </template>
     <button v-if="info.marked" i-carbon-star-filled text-yellow />
   </div>
 </template>

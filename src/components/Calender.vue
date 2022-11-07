@@ -25,8 +25,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div h-screen flex="~ col">
-    <div px-3 py-2 border="b gray-200/50" grid="~ cols-7" justify-items-center>
+  <div h-screen flex="~ col" inline-flex shrink-0>
+    <div px-3 py-2 border-b grid="~ cols-7" justify-items-center>
       <h5 
         v-for="week in weeks" 
         :key="week.name" 
@@ -36,7 +36,7 @@ onMounted(() => {
     </div>
     <div grow-1 overflow-auto ref="container" pl-3 pr-2>
       <div h-1px ref="prevLoader" />
-      <div grid="~ cols-7">
+      <div grid="~ cols-7 gap-y-2">
         <CalenderDay
           v-for="[day, info] in days.days.entries()"
           :key="info.id"

@@ -5,20 +5,15 @@ const planList = computed(() => {
   const orderedList = [list.shift()!, ...list.reverse()]
   return orderedList
 })
-// import { observerManager } from '@kricsleo/observer'
-// const homeRef = ref<HTMLElement>()
-// function backHome() {
-//   homeRef.value?.scrollIntoView()
-// }
 </script>
 
 <template>
-  <div grid="~ cols-2" max-w-260 mx-auto border-x>
+  <div inline-flex mx-auto>
     <Calender />
-    <div h-screen flex="~ col" border="l gray-200/50">
+    <div h-screen flex="~ col" w-100 border-x shrink-0>
       <Header />
       <div p-2 flex items-center justify-center text-2xl>
-        <button i-carbon:circle-filled @click="focusToday" title="Go Today!" />
+        <button i-carbon:location-person-filled @click="focusToday" title="Go Today!" color-yellow />
       </div>
       <section grow-1 overflow-auto>
         <ScheduledCard 

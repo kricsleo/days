@@ -25,7 +25,7 @@ const inputRef = ref<HTMLInputElement>()
 </script>
 
 <template>
-  <section @click="usePlan(planId)" text-xl p-2 border-b :class="{'bg-zinc/50': using}">
+  <section @click="usePlan(planId)" shrink-0 text-xl p-2 border-b :class="{'bg-zinc/50': using}">
     <div flex items-center>
       <div i-carbon:calendar-heat-map mr-2 />
       <h5 v-if="plan.start && plan.end" flex items-center>
@@ -53,11 +53,11 @@ const inputRef = ref<HTMLInputElement>()
 
     <div flex gap-10>
       <div flex items-stretch gap-2>
-        <div wh-15 text-3xl rounded-2 bg-rose flex items-center justify-center text-white>
+        <div wh-15 text-3xl rounded-2 bg-red flex items-center justify-center text-white>
           <div i-carbon:face-dizzy />
         </div>
         <div>
-          <div font-bold text-4xl text-rose>{{workingDays}}</div>
+          <div font-bold text-4xl text-red>{{workingDays}}</div>
           <div op-60 text-sm>Working days</div>
         </div>
       </div>

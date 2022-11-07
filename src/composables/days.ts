@@ -205,7 +205,7 @@ export function getDay(day: Date): Day {
   const tip = chineseDay ? chineseDay.type === 'holiday' 
     ? chineseDay.name
     : chineseDay.type === 'workingday'
-    ? `补班(${chineseDay.name})`
+    ? `补班`
     : '' : ''
   return {
     id: `day_${day.valueOf()}`,
