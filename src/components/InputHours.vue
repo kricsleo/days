@@ -9,9 +9,9 @@ const emits = defineEmits<{
 </script>
 
 <template>
-  <div grid="~ cols-[2.25rem_2.25rem_2.25rem]" text-3xl>
+  <div grid="~ cols-[36px_36px_36px]" text-3xl title="working hours per day">
     <button 
-      i-carbon-chevron-left 
+      i-carbon:caret-left
       :disabled="modelValue <= 4"
       @click="emits('update:modelValue', modelValue - 1)" 
       :class="modelValue <= 4 ? 'text-gray' : ''" />
@@ -23,7 +23,7 @@ const emits = defineEmits<{
       <span shrink-0 i-carbon-number-8 />
     </div>
     <button 
-      i-carbon-chevron-right 
+      i-carbon:caret-right
       :disabled="modelValue >= 8"
       @click="emits('update:modelValue', modelValue + 1)"
       :class="modelValue >= 8 ? 'text-gray' : ''" />
