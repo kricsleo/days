@@ -46,6 +46,7 @@ export const days = reactive({
 export const start = ref<Date>()
 export const end = ref<Date>()
 export const planId = ref(Date.now().toString())
+export const hours = ref(8)
 
 export const plans = reactive<Map<string, Plan>>(new Map(
   [[planId.value, {

@@ -8,9 +8,9 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div inline-flex mx-auto>
+  <div flex justify-center w-250 mx-auto>
     <Calender />
-    <div h-screen flex="~ col" w-100 border-x shrink-0>
+    <div h-screen flex="~ col" w-120 border-r shrink-0>
       <Header />
       <div p-2 flex items-center justify-center text-2xl>
         <button i-carbon:location-person-filled @click="focusToday" title="Go Today!" color-yellow />

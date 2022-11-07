@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { eachDayOfInterval, format } from 'date-fns';
-import { getDay, usePlan, deletePlan, addPlan, plans, planId as currentPlanId } from '~/composables/days';
+import { getDay, usePlan, deletePlan, addPlan, plans, planId as currentPlanId, hours } from '~/composables/days';
 
 const props = defineProps<{
   planId: string
@@ -19,27 +19,27 @@ const selectedDays = computed(() => {
 const workingDays = computed(() => selectedDays.value.filter(day => day.work).length)
 const peaceDays = computed(() => selectedDays.value.filter(day => day.peace).length)
 // const inputHours = ref(8)
-// const workingHours = computed(() => workingDays.value * inputHours.value)
+const workingHours = computed(() => workingDays.value * hours.value)
 
 const inputRef = ref<HTMLInputElement>()
 </script>
 
 <template>
-  <section @click="usePlan(planId)" shrink-0 text-xl p-2 border-b :class="{'bg-zinc/50': using}">
+  <section @click="usePlan(planId)" shrink-0 text-xl px-2 py-3 border-b space-y-sm :class="{'bg-red/10': using}">
     <div flex items-center>
-      <div i-carbon:calendar-heat-map mr-2 />
+      <div i-carbon:time mr-2 />
       <h5 v-if="plan.start && plan.end" flex items-center>
         {{format(plan.start, 'MM.dd')}}
         <div v-if="plan.start !== plan.end" i-carbon:direction-straight-right mx-1 />
         <span v-if="plan.start !== plan.end">{{format(plan.end, 'MM.dd')}}</span>
       </h5>
-      <div ml-auto text-2xl flex items-center>
+      <div ml-auto text-2xl flex items-center op-50 hover:op-100>
         <button v-if="!deletable" i-carbon:add @click.stop="addPlan({...plan})" title="Add this plan." />
         <button v-if="deletable" i-carbon:close @click.stop="deletePlan(planId)" title="Remove this plan!" />
       </div>
     </div>
 
-    <div flex items-center mt-2 mb-4 text-gray>
+    <!-- <div flex items-center mt-2 mb-4 text-gray>
       <label :for="`input_${planId}`" i-carbon:pen class="mr-2" />
       <input
         ref="inputRef"
@@ -49,29 +49,40 @@ const inputRef = ref<HTMLInputElement>()
         @update:modelValue="plan.note = $event" 
         @keyup.enter="inputRef?.blur()"
         bg-transparent outline-none w-50 />
-    </div>
+    </div> -->
 
-    <div flex gap-10>
-      <div flex items-stretch gap-2>
-        <div wh-15 text-3xl rounded-2 bg-red flex items-center justify-center text-white>
+    <div x-between gap-2 text-2xl>
+      <div y-center gap-2>
+        <div text-white bg-red wh-12 rounded-2 center>
           <div i-carbon:face-dizzy />
         </div>
         <div>
-          <div font-bold text-4xl text-red>{{workingDays}}</div>
+          <div font-bold>{{workingDays}}</div>
           <div op-60 text-sm>Working days</div>
         </div>
       </div>
 
-      <div flex items-stretch gap-2>
-        <div wh-15 text-3xl rounded-2 bg-green-6 flex items-center justify-center text-white>
+      <div y-center gap-2>
+        <div text-white bg-red wh-12 rounded-2 center>
+          <div i-carbon:face-dizzy />
+        </div>
+        <div>
+          <div font-bold>{{workingHours}}</div>
+          <div op-60 text-sm>Working hours</div>
+        </div>
+      </div>
+
+      <div y-center gap-2>
+        <div text-white bg-green wh-12 rounded-2 center>
           <div i-carbon:face-cool />
         </div>
-        <div flex="~ col" justify-between>
-          <div text-2xl>{{peaceDays}}</div>
-          <div op-60 text-sm>Peace days</div>
+        <div>
+          <div font-bold>{{peaceDays}}</div>
+          <div op-60 text-sm>Rest days</div>
         </div>
       </div>
     </div>
+
   </section>
 </template>
 
