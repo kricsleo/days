@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Day, toggleSelect, toggleMark, start, end } from '~/composables/days';
+import { Day, toggleSelect, toggleMark, start, end, marks } from '~/composables/days';
 import { pressedDay, hoveredDay } from '~/composables/hover-select';
 import { format, isSameDay } from 'date-fns'
 
@@ -41,6 +41,6 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
       <span leading-none text-sm scale-70>{{ info.tip || format(date, 'MMM').toUpperCase() }}</span>
       <span leading-none font-bold>{{ format(date, 'd') }}</span>
     </template>
-    <button v-if="info.marked" i-carbon-star-filled text-yellow />
+    <button v-if="marks.has(date)" i-carbon-star-filled text-yellow />
   </div>
 </template>

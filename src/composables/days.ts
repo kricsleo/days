@@ -10,7 +10,6 @@ export interface Day {
   current: boolean
   today: boolean
   selected: boolean
-  marked: boolean
   tip: string
 }
 
@@ -18,6 +17,11 @@ export interface Plan {
   id: number
   start: number | null
   end: number | null
+  note?: string
+}
+
+export interface Mark {
+  date: number
   note?: string
 }
 
@@ -62,6 +66,9 @@ const initNextDays = differenceInCalendarDays(
 export const days = reactive({
   days: getNearbyDays(initStartDay, initPrevDays, initNextDays),
 })
+
+export const marks = useLocalStorage<Map<number, Mark>>('marks', new Map())
+
 watch([start, end], () => {
   clearSelected()
   selectPeriod(start.value, end.value)
@@ -142,8 +149,11 @@ export function clearSelected() {
 }
 
 export function toggleMark(day: number) {
-  const info  = days.days.get(day)!
-  info.marked = !info.marked
+  if(marks.value.has(day)) {
+    marks.value.delete(day)
+  } else {
+    marks.value.set(day, { date: day })
+  }
 }
 
 export function addNextDays(count: number) {
@@ -205,7 +215,6 @@ export function getDay(day: number): Day {
     work: isWorkingDay(day),
     peace: isPeaceDay(day),
     selected: false,
-    marked: false,
     tip
   }
 }
