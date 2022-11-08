@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { focusToday, plans, hours } from '~/composables/days'
 const planList = computed(() => {
-  const list = [...plans.entries()]
+  const list = [...plans.value.entries()]
   const orderedList = [list.shift()!, ...list.reverse()]
   return orderedList
 })

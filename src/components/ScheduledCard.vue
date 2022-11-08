@@ -3,25 +3,25 @@ import { eachDayOfInterval, format } from 'date-fns';
 import { getDay, usePlan, deletePlan, addPlan, plans, planId as currentPlanId, hours } from '~/composables/days';
 
 const props = defineProps<{
-  planId: string
+  planId: number
   deletable?: boolean
 }>()
 
-const plan = computed(() => plans.get(props.planId)!)
+const plan = computed(() => plans.value.get(props.planId)!)
 const using = computed(() => props.planId === currentPlanId.value)
 const selectedDays = computed(() => {
   const inRangeDays = plan.value.start && plan.value.end ? eachDayOfInterval({
     start: plan.value.start,
     end: plan.value.end,
   }) : []
-  return inRangeDays.map(day => getDay(day))
+  return inRangeDays.map(day => getDay(day.valueOf()))
 })
 const workingDays = computed(() => selectedDays.value.filter(day => day.work).length)
 const peaceDays = computed(() => selectedDays.value.filter(day => day.peace).length)
 // const inputHours = ref(8)
 const workingHours = computed(() => workingDays.value * hours.value)
 
-const inputRef = ref<HTMLInputElement>()
+// const inputRef = ref<HTMLInputElement>()
 </script>
 
 <template>

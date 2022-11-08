@@ -38,9 +38,9 @@ onMounted(() => {
       <div h-1px ref="prevLoader" />
       <div grid="~ cols-7 gap-y-2">
         <CalenderDay
-          v-for="[day, info] in days.days.entries()"
+          v-for="[date, info] in days.days.entries()"
           :key="info.id"
-          :day="day"
+          :date="date"
           :info="info" />
       </div>
       <div h-1px ref="nextLoader" />

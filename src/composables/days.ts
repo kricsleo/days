@@ -1,8 +1,10 @@
-import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, format, isSameDay, isToday, isWeekend, isWithinInterval, max, min, previousSunday, startOfDay, startOfWeek } from 'date-fns'
+import { StorageSerializers } from '@vueuse/core'
+import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isToday, isWeekend, isWithinInterval, max, min, previousSunday, startOfDay, startOfWeek } from 'date-fns'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 export interface Day {
-  id: string
+  date: number
+  id: number
   work: boolean
   peace: boolean
   current: boolean
@@ -13,8 +15,9 @@ export interface Day {
 }
 
 export interface Plan {
-  start?: Date
-  end?: Date
+  id: number
+  start: number | null
+  end: number | null
   note?: string
 }
 
@@ -28,66 +31,74 @@ export const weeks = [
   { name: 'Su', peace: true },
 ]
 
-export const current = ref(startOfDay(new Date()))
-
-const initPrevDays = computed(() => differenceInCalendarDays(
-  current.value,
-  startOfWeek(addWeeks(current.value, -12), { weekStartsOn: 1 }),
-))
-const initNextDays = computed(() => differenceInCalendarDays(
-  endOfWeek(addWeeks(current.value, 24), { weekStartsOn: 1 }),
-  current.value,
-))
-
-export const days = reactive({
-  days: getNearbyDays(current.value, initPrevDays.value, initNextDays.value),
-})
-
-export const start = ref<Date>()
-export const end = ref<Date>()
-export const planId = ref(Date.now().toString())
-export const hours = ref(8)
-
-export const plans = reactive<Map<string, Plan>>(new Map(
+export const current = ref(startOfDay(Date.now()).valueOf())
+export const start = useLocalStorage<number>('start', null, { serializer: StorageSerializers.object })
+export const end = useLocalStorage<number>('end', null, { serializer: StorageSerializers.object })
+export const hours = useLocalStorage('hours', 8)
+export const planId = useLocalStorage('planId', Date.now())
+export const plans = useLocalStorage<Map<number, Plan>>('plans', new Map(
   [[planId.value, {
+    id: planId.value,
     start: start.value,
     end: end.value,
     note: ''
   }]]
 ))
 
-export function addPlan(plan: Plan) {
-  const id = Date.now().toString()
-  plans.set(id, plan)
-}
-
-export function deletePlan(id: string) {
-  plans.delete(id)
-  if(id === planId.value) {
-    planId.value = [...plans.keys()][0]
-  }
-}
-
-export function usePlan(id: string) {
-  planId.value = id
-  const plan = plans.get(id)!
-  start.value = plan.start
-  end.value = plan.end
-}
-
+const initStartDay = min(
+  [...plans.value.values()]
+  .map(plan => plan.start!)
+  .concat(current.value)
+  .filter(Boolean)
+).valueOf()
+const initPrevDays = differenceInCalendarDays(
+  initStartDay,
+  startOfWeek(addWeeks(initStartDay, -12), { weekStartsOn: 1 }),
+)
+const initNextDays = differenceInCalendarDays(
+  endOfWeek(addWeeks(initStartDay, 24), { weekStartsOn: 1 }),
+  initStartDay,
+)
+export const days = reactive({
+  days: getNearbyDays(initStartDay, initPrevDays, initNextDays),
+})
 watch([start, end], () => {
   clearSelected()
   selectPeriod(start.value, end.value)
-  const plan = plans.get(planId.value)!
+  const plan = plans.value.get(planId.value)!
   plan.start = start.value
   plan.end = end.value
-})
+}, { immediate: true })
 
 watch(planId, () => {
-  start.value && focusDay(start.value)
+  focusDay(start.value)
 })
 
-export function toggleSelect(day: Date) {
+export function addPlan(plan: Plan) {
+  const id = Date.now()
+  plan.id = id
+  plans.value.set(id, plan)
+}
+
+export function deletePlan(id: number) {
+  plans.value.delete(id)
+  if(id === planId.value) {
+    planId.value = [...plans.value.keys()][0]
+  }
+}
+
+export function usePlan(id: number) {
+  if(planId.value === id) {
+    focusDay(start.value)
+  } else {
+    planId.value = id
+    const plan = plans.value.get(id)!
+    start.value = plan.start
+    end.value = plan.end
+  }
+}
+
+export function toggleSelect(day: number) {
   if(start.value && end.value) {
     const isInPlan = isWithinInterval(day, {
       start: start.value,
@@ -95,14 +106,14 @@ export function toggleSelect(day: Date) {
     })
     if(isInPlan) {
       if(start.value === end.value) {
-        start.value = end.value = undefined
+        start.value = end.value = null
       } else {
         start.value = end.value = day
       }
     } else {
       if(start.value === end.value) {
-        end.value = max([day, start.value])
-        start.value = min([day, start.value])
+        end.value = max([day, start.value]).valueOf()
+        start.value = min([day, start.value]).valueOf()
       } else {
         start.value = end.value = day
       }
@@ -112,29 +123,7 @@ export function toggleSelect(day: Date) {
   }
 }
 
-// export function toggleSelect(day: Date) {
-//   const info  = days.days.get(day)!
-//   const selectedDates = [...selectedDays.value.keys()]
-//   if(info.selected) {
-//     const hasPeriod = selectedDates.length > 1
-//     if(hasPeriod) {
-//       clearSelected()
-//       info.selected = true
-//     } else {
-//       info.selected = false
-//     }
-//   } else {
-//     const hasPeriodStart = selectedDates.length === 1
-//     if(hasPeriodStart) {
-//       selectPeriod(selectedDates[0], day)
-//     } else {
-//       clearSelected()
-//       info.selected = true
-//     }
-//   }
-// }
-
-export function selectPeriod(day1?: Date, day2?: Date) {
+export function selectPeriod(day1?: number, day2?: number) {
   if(day1 && day2) {
     days.days.forEach((info, date) => {
       info.selected = isWithinInterval(date, {
@@ -152,7 +141,7 @@ export function clearSelected() {
   days.days.forEach(info => info.selected = false)
 }
 
-export function toggleMark(day: Date) {
+export function toggleMark(day: number) {
   const info  = days.days.get(day)!
   info.marked = !info.marked
 }
@@ -169,31 +158,31 @@ export function addPrevDays(count: number) {
   days.days = new Map([...prevDays, ...days.days])
 }
 
-export function getNearbyDays(current: Date, prev: number, next: number): Map<Date, Day> {
+export function getNearbyDays(current: number, prev: number, next: number): Map<number, Day> {
   const prevDays = getPrevDays(current, prev)
   const nextDays = getNextDays(current, next)
   return new Map([...prevDays, [current, getDay(current)], ...nextDays])
 }
 
-export function getPrevDays(current: Date, prev: number): Map<Date, Day> {
+export function getPrevDays(current: number, prev: number): Map<number, Day> {
   const days = eachDayOfInterval({
     start: addDays(current, -prev),
     end: addDays(current, -1),
   })
-  return new Map(days.map(day => [day, getDay(day)]))
+  return new Map(days.map(day => [day.valueOf(), getDay(day.valueOf())]))
 }
 
-export function getNextDays(current: Date, next: number): Map<Date, Day> {
+export function getNextDays(current: number, next: number): Map<number, Day> {
   const days = eachDayOfInterval({
     start: addDays(current, 1),
     end: addDays(current, next),
   })
-  return new Map(days.map(day => [day, getDay(day)]))
+  return new Map(days.map(day => [day.valueOf(), getDay(day.valueOf())]))
 }
 
-export function focusDay(day: Date) {
-  const targetId = getDay(previousSunday(day)).id
-  const targetDayNode = document.getElementById(targetId)
+export function focusDay(day: number) {
+  const targetId = getDay(previousSunday(day).valueOf()).id
+  const targetDayNode = document.getElementById(String(targetId))
   targetDayNode?.scrollIntoView()
 }
 
@@ -201,7 +190,7 @@ export function focusToday() {
   focusDay(current.value)
 }
 
-export function getDay(day: Date): Day {
+export function getDay(day: number): Day {
   const chineseDay = findChineseDay(day)
   const tip = chineseDay ? chineseDay.type === 'holiday' 
     ? chineseDay.name
@@ -209,7 +198,8 @@ export function getDay(day: Date): Day {
     ? `补班`
     : '' : ''
   return {
-    id: `day_${day.valueOf()}`,
+    id: day,
+    date: day,
     current: current.value === day,
     today: isToday(day),
     work: isWorkingDay(day),
@@ -220,12 +210,12 @@ export function getDay(day: Date): Day {
   }
 }
 
-export function isWorkingDay(day: Date): boolean {
+export function isWorkingDay(day: number | Date): boolean {
   return isWeekend(day) ? isChineseWorkingDay(day)
   : !isChineseHoliday(day)
 }
 
-export function isPeaceDay(day: Date): boolean {
+export function isPeaceDay(day: number | Date): boolean {
   return isWeekend(day) ? !isChineseWorkingDay(day)
     : isChineseHoliday(day)
 }
