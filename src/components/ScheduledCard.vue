@@ -25,7 +25,7 @@ const workingHours = computed(() => workingDays.value * hours.value)
 </script>
 
 <template>
-  <section @click="usePlan(planId)" shrink-0 text-xl px-2 py-3 border-b space-y-sm :class="{'bg-red/10': using}">
+  <section @click="usePlan(planId)" shrink-0 text-xl p3 border-b space-y-sm :class="{'bg-red/10': using}">
     <div flex items-center>
       <div i-carbon:time mr-2 />
       <h5 v-if="plan.start && plan.end" flex items-center>
@@ -51,34 +51,24 @@ const workingHours = computed(() => workingDays.value * hours.value)
         bg-transparent outline-none w-50 />
     </div> -->
 
-    <div x-between gap-2 text-2xl>
+    <div grid="~ cols-2" gap-2 text-2xl>
       <div y-center gap-2>
         <div text-white bg-red wh-12 rounded-2 center>
-          <div i-carbon:face-dizzy />
+          <div i-carbon:construction />
         </div>
-        <div>
-          <div font-bold>{{workingDays}}</div>
-          <div op-60 text-sm>Working days</div>
-        </div>
-      </div>
-
-      <div y-center gap-2>
-        <div text-white bg-red wh-12 rounded-2 center>
-          <div i-carbon:face-dizzy />
-        </div>
-        <div>
-          <div font-bold>{{workingHours}}</div>
-          <div op-60 text-sm>Working hours</div>
+        <div font-bold flex items-baseline>
+          {{workingDays}}<span text-sm>d</span>
+          <span text-sm self-center mx-2>=</span>
+          {{workingHours}}<span text-sm>h</span>
         </div>
       </div>
 
       <div y-center gap-2>
         <div text-white bg-green wh-12 rounded-2 center>
-          <div i-carbon:face-cool />
+          <div i-carbon:hospital-bed />
         </div>
-        <div>
-          <div font-bold>{{peaceDays}}</div>
-          <div op-60 text-sm>Rest days</div>
+        <div font-bold>
+          {{peaceDays}}<span text-sm>d</span>
         </div>
       </div>
     </div>

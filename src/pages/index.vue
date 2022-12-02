@@ -8,11 +8,11 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div flex justify-center w-250 mx-auto>
+  <div flex w-270 h-150 mx-auto border rounded-1 overflow-hidden>
     <Calender />
-    <div h-screen flex="~ col" w-120 border-r shrink-0>
+    <div flex="~ col" border-r grow-1>
       <Header />
-      <div p-2 grid="~ cols-2" justify-items-center text-3xl>
+      <div p-2 flex justify-end gap3 justify-items-center text-3xl border-b>
         <button i-carbon:location-person-filled @click="focusToday" title="Go Today!" color-yellow />
         <InputHours v-model="hours" />
       </div>
