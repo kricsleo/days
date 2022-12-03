@@ -8,12 +8,12 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div flex w-270 h-150 mx-auto border rounded-1 overflow-hidden>
+  <div flex w-270 h-130 mx-auto border rounded-1 overflow-hidden>
     <Calender />
     <div flex="~ col" border-r grow-1>
       <Header />
       <div p-2 flex justify-end gap3 justify-items-center text-3xl border-b>
-        <button i-carbon:location-person-filled @click="focusToday" title="Go Today!" color-yellow />
+        <button i-carbon:user-avatar-filled @click="focusToday" title="Go Today!" color-yellow />
         <InputHours v-model="hours" />
       </div>
       <section grow-1 overflow-auto>
