@@ -31,7 +31,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
       'rounded-r-full': isEnd,
     }]"
     flex="~ col" justify-center items-center
-    wh-18
+    wh-20
     cursor-pointer
     select-none
     @click="toggleSelect(date)"

@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div flex="~ col" shrink-0 border rounded>
-    <div py-2 grid="~ cols-7" justify-items-center>
+    <div py-2 grid="~ cols-7" justify-items-center border-b>
       <h5 
         v-for="week in weeks" 
         :key="week.name" 
@@ -41,9 +41,16 @@ onMounted(() => {
           v-for="[date, info] in days.days.entries()"
           :key="info.id"
           :date="date"
-          :info="info" />
+          :info="info"
+          class="border-t border-r day" />
       </div>
       <div h-1px ref="nextLoader" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.day:nth-of-type(7n) {
+  border-right: none;
+}
+</style>
