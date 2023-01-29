@@ -6,20 +6,12 @@ body,
   padding: 0;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-track {
   display: none;
 }
 
 ::-webkit-scrollbar-corner {
   background-color: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 999rem;
-  background-color: rgba(107, 114, 128, 0.5);
 }

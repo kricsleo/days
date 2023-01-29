@@ -8,7 +8,7 @@ const planList = computed(() => {
 </script>
 
 <template>
-  <div flex w-270 h-130 mx-auto border rounded-1 overflow-hidden>
+  <div flex w-270 h-130 mx-auto rounded-1 overflow-hidden>
     <Calender />
     <div flex="~ col" border-r grow-1>
       <Header />
