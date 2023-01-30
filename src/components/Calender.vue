@@ -25,8 +25,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div flex="~ col" shrink-0 border rounded>
-    <div py-2 grid="~ cols-7" justify-items-center border-b>
+  <div flex="~ col" shrink-0>
+    <div py-2 grid="~ cols-7" justify-items-center>
       <h5 
         v-for="week in weeks" 
         :key="week.name" 
@@ -34,7 +34,7 @@ onMounted(() => {
         {{week.name}}
       </h5>
     </div>
-    <div grow-1 overflow-auto ref="container">
+    <div grow-1 overflow-auto border rounded ref="container">
       <div h-1px ref="prevLoader" />
       <div grid="~ cols-7">
         <CalenderDay

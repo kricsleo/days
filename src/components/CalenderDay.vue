@@ -30,7 +30,6 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
       'rounded-l-full': isStart, 
       'rounded-r-full': isEnd,
     }]"
-    flex="~ col" justify-center items-center
     wh-20
     cursor-pointer
     select-none
@@ -38,8 +37,8 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
     @contextmenu.prevent="toggleMark(date)">
     <div v-if="info.current" i-carbon:user-avatar-filled text-3xl color-yellow />
     <template v-else>
-      <span leading-none text-2 text-center>{{ info.tip || format(date, 'L月') }}</span>
-      <span leading-none text-7>{{ format(date, 'd') }}</span>
+      <span leading-none text-6>{{ format(date, 'd') }}</span>
+      <span leading-none text-2 text-center>/{{ info.tip || format(date, 'L月') }}</span>
     </template>
     <button v-if="marks.has(date)" i-carbon-star-filled text-yellow />
   </div>
