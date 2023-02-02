@@ -1,5 +1,5 @@
 <template>
-  <main font-sans text="gray-700 dark:gray-200" dark:bg-dark pt20>
+  <main class="font-sans text-gray bg-dark pt20 min-h-100vh">
     <RouterView />
   </main>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Day, toggleSelect, toggleMark, start, end, marks, current } from '~/composables/days';
 import { pressedDay, hoveredDay } from '~/composables/hover-select';
-import { format, isBefore, isSameDay, isSameMonth } from 'date-fns'
+import { format, getMonth, isBefore, isSameDay, isSameMonth } from 'date-fns'
 
 const props = defineProps<{
   date: number
@@ -13,6 +13,7 @@ const { pressed } = useMousePressed({target: nodeRef})
 const hovered = useElementHover(nodeRef)
 const isStart = computed(() => start.value && isSameDay(start.value, props.date))
 const isEnd = computed(() => end.value && isSameDay(end.value, props.date))
+const isOddMonth = computed(() => getMonth(props.date) % 2 === 0)
 
 watch(pressed, () => pressedDay.value = pressed.value ? props.date : undefined)
 watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
@@ -22,14 +23,13 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
   <div
     ref="nodeRef"
     :id="String(info.id)"
-    :text="info.selected ? info.peace ? 'gray-1/50' : 'white'
-      : info.peace ? 'gray/80 dark:gray-2/80' 
-        : isBefore(date, current) ? 'rose-3' : 'red'"
     :class="[{
       'bg-red': info.selected,
       'rounded-l-full': isStart, 
       'rounded-r-full': isEnd,
-    }]"
+      'peace': info.peace,
+    }, isOddMonth ? 'text-red' : 'text-blue']"
+    p-1
     wh-20
     cursor-pointer
     select-none
@@ -43,3 +43,13 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
     <button v-if="marks.has(date)" i-carbon-star-filled text-yellow />
   </div>
 </template>
+
+<style scoped>
+.peace {
+  background-image: radial-gradient(#9ca3af 1px,transparent 0);
+  background-size: 10px 10px;
+}
+.peace * {
+  background-color: #121212;
+}
+</style>
