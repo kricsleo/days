@@ -27,29 +27,31 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
       'bg-gray-700': info.selected,
       'peace': info.peace,
     }, isOddMonth ? 'text-red' : 'text-blue']"
-    px-1
+    p-1
     h-30
     cursor-pointer
     select-none
     @click="toggleSelect(date)"
     @contextmenu.prevent="toggleMark(date)">
-    <!-- <span text-xl leading-none>{{ format(date, 'd') }}</span>
-      <span text-xs leading-none>/{{ format(date, 'L月') }}</span> -->
-      <div inline-block px-1 rounded leading-none :class="{'bg-yellow': info.current}">
-        <span text-xs>{{ format(date, 'L月d号') }}</span>
-        <span v-if="info.tip" text-xs>({{ info.tip }})</span>
+    <div flex items-center gap-1 leading-none text-sm>
+      <div p-1 rounded :class="{'bg-yellow': info.current}">
+        <span>{{ format(date, 'L月d号') }}</span>
+        <span v-if="info.tip">({{ info.tip }})</span>
       </div>
-      <button v-if="marks.has(date)" i-carbon-star-filled class="!bg-yellow" />
-      <!-- <div v-if="info.current" i-carbon:user-avatar-filled inline-block text-xs color-yellow /> -->
+      <span v-if="marks.has(date)">
+        <button i-carbon-star-filled color-yellow />
+      </span>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .peace {
-  background-image: radial-gradient(#9ca3af 1px,transparent 0);
-  background-size: 10px 10px;
+  background-image: radial-gradient(#5A7886 15%, transparent 15%), radial-gradient(#5A7886 15%, transparent 15%);
+  background-position: 0px 0px, 8px 8px;
+  background-size: 16px 16px;
 }
-.peace * {
+.peace span {
   background-color: #121212;
 }
 </style>
