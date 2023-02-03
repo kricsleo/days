@@ -24,24 +24,23 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
     ref="nodeRef"
     :id="String(info.id)"
     :class="[{
-      'bg-red': info.selected,
-      'rounded-l-full': isStart, 
-      'rounded-r-full': isEnd,
+      'bg-gray-700': info.selected,
       'peace': info.peace,
     }, isOddMonth ? 'text-red' : 'text-blue']"
-    p-1
-    wh-20
+    px-1
+    h-30
     cursor-pointer
     select-none
     @click="toggleSelect(date)"
     @contextmenu.prevent="toggleMark(date)">
-    <div v-if="info.current" i-carbon:user-avatar-filled text-3xl color-yellow />
-    <template v-else>
-      <span text-lg leading-none>{{ format(date, 'd') }}</span>
-      <span text-xs leading-none>/{{ format(date, 'L月') }}</span>
-      <div text-xs leading-none>{{ info.tip }}</div>
-    </template>
-    <button v-if="marks.has(date)" i-carbon-star-filled class="!bg-yellow" />
+    <!-- <span text-xl leading-none>{{ format(date, 'd') }}</span>
+      <span text-xs leading-none>/{{ format(date, 'L月') }}</span> -->
+      <div inline-block px-1 rounded leading-none :class="{'bg-yellow': info.current}">
+        <span text-xs>{{ format(date, 'L月d号') }}</span>
+        <span v-if="info.tip" text-xs>({{ info.tip }})</span>
+      </div>
+      <button v-if="marks.has(date)" i-carbon-star-filled class="!bg-yellow" />
+      <!-- <div v-if="info.current" i-carbon:user-avatar-filled inline-block text-xs color-yellow /> -->
   </div>
 </template>
 
