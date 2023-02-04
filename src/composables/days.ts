@@ -35,7 +35,7 @@ export const weeks = [
   { name: '周日', peace: true },
 ]
 
-export const current = ref(startOfDay(Date.now() - 7*24*60*60*1000).valueOf())
+export const current = ref(startOfDay(Date.now()).valueOf())
 export const start = useLocalStorage<number>('start', null, { serializer: StorageSerializers.object })
 export const end = useLocalStorage<number>('end', null, { serializer: StorageSerializers.object })
 export const hours = useLocalStorage('hours', 8)
