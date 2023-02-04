@@ -25,7 +25,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div flex="~ col" shrink-0 class="h-60vh mx-5">
+  <div flex="~ col" shrink-0 class="h-70vh max-w-300 mx-auto">
     <div py-2 grid="~ cols-7" justify-items-center>
       <h5 
         v-for="week in weeks" 
