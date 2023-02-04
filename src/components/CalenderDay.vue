@@ -36,7 +36,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
     <div flex flex-wrap items-center gap-1 leading-none>
       <div whitespace-nowrap p-2px :class="[
         {'border rounded border-yellow': info.current}, 
-        info.current ? 'text-yellow-5' : isOddMonth ? 'text-emerald-5' : 'text-sky-5']">
+        info.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
         <span text-5>{{ format(date, 'd') }}</span>
         <span text-2> /{{ format(date, 'L月') }}</span>
         <span v-if="info.tip" text-2>({{ info.tip }})</span>
@@ -48,7 +48,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
 
 <style scoped>
 .peace {
-  background-image: radial-gradient(#5a788670 15%, transparent 15%), radial-gradient(#5A788670 15%, transparent 15%);
+  background-image: radial-gradient(#5a788650 15%, transparent 15%), radial-gradient(#5A788650 15%, transparent 15%);
   background-position: 0px 0px, 8px 8px;
   background-size: 16px 16px;
 }
