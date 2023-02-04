@@ -191,7 +191,7 @@ export function getNextDays(current: number, next: number): Map<number, Day> {
 }
 
 export function focusDay(day: number) {
-  const targetId = getDay(previousSunday(day).valueOf()).id
+  const targetId = getDay(day).id
   const targetDayNode = document.getElementById(String(targetId))
   targetDayNode?.scrollIntoView()
 }

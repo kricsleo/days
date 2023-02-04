@@ -42,7 +42,7 @@ onMounted(() => {
           :key="info.id"
           :date="date"
           :info="info"
-          class="border-t border-r day" />
+          class="day" />
       </div>
       <div h-1px ref="nextLoader" />
     </div>
@@ -50,7 +50,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.day {
+  box-shadow: inset -1px 0px 0px #3a3e41,
+    inset 0px -1px 0px #3a3e41;
+}
 .day:nth-of-type(7n) {
   border-right: none;
+
+  box-shadow: inset 0px -1px 0px #3a3e41;
 }
 </style>

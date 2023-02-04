@@ -31,18 +31,17 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
     h-30
     cursor-pointer
     select-none
+    leading-none
     @click="toggleSelect(date)"
     @contextmenu.prevent="toggleMark(date)">
-    <div flex flex-wrap items-center gap-1 leading-none>
-      <div whitespace-nowrap p-2px :class="[
-        {'border rounded border-yellow': info.current}, 
-        info.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
-        <span text-5>{{ format(date, 'd') }}</span>
-        <span text-2> /{{ format(date, 'L月') }}</span>
-        <span v-if="info.tip" text-2>({{ info.tip }})</span>
-      </div>
-      <button v-if="marks.has(date)" i-carbon-star-filled text-yellow-5 />
+    <div inline-block whitespace-nowrap p-2px :class="[
+      {'border rounded border-yellow': info.current}, 
+      info.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
+      <span text-5>{{ format(date, 'd') }}</span>
+      <span text-2> /{{ format(date, 'L月') }}</span>
+      <span v-if="info.tip" text-2>({{ info.tip }})</span>
     </div>
+    <div v-if="marks.has(date)" i-carbon-star-filled text-yellow-5 />
   </div>
 </template>
 
