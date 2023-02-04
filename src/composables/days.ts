@@ -26,16 +26,16 @@ export interface Mark {
 }
 
 export const weeks = [
-  { name: 'Mo', peace: false },
-  { name: 'Tu', peace: false },
-  { name: 'We', peace: false},
-  { name: 'Th', peace: false },
-  { name: 'Fr', peace: false },
-  { name: 'Sa', peace: true },
-  { name: 'Su', peace: true },
+  { name: '周一', peace: false },
+  { name: '周二', peace: false },
+  { name: '周三', peace: false},
+  { name: '周四', peace: false },
+  { name: '周五', peace: false },
+  { name: '周六', peace: true },
+  { name: '周日', peace: true },
 ]
 
-export const current = ref(startOfDay(Date.now()).valueOf())
+export const current = ref(startOfDay(Date.now() - 7*24*60*60*1000).valueOf())
 export const start = useLocalStorage<number>('start', null, { serializer: StorageSerializers.object })
 export const end = useLocalStorage<number>('end', null, { serializer: StorageSerializers.object })
 export const hours = useLocalStorage('hours', 8)

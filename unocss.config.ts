@@ -11,15 +11,6 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({ scale: 1.2, warn: true, }),
   ],
-  theme: {
-    colors: {
-      dark: '#121212',
-      red: '#ef476f',
-      yellow: '#ffd166',
-      green: '#06d6a0',
-      blue: '#118ab2'
-    }
-  },
   shortcuts: [
     [/^border(.*)$/, ([, position]) => `border-#3a3e41 border${position}`],
     [/^wh-(.*)$/, ([, size]) => `w-${size} h-${size}`],
