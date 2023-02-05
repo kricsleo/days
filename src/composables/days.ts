@@ -45,6 +45,7 @@ export const plans = useLocalStorage<Map<number, Plan>>('plans', new Map(
     id: planId.value,
     start: start.value,
     end: end.value,
+    lane: 0,
     note: ''
   }]]
 ))

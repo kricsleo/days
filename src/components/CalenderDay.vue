@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Day, toggleSelect, toggleMark, start, end, marks, current, hours, getDay } from '~/composables/days';
+import { Day, toggleSelect, toggleMark, start, end, marks, current, hours, getDay, plans, deletePlan } from '~/composables/days';
 import { pressedDay, hoveredDay } from '~/composables/hover-select';
-import { eachDayOfInterval, format, getMonth, isBefore, isSameDay, isSameMonth } from 'date-fns'
+import { eachDayOfInterval, format, getMonth, isBefore, isSameDay, isSameMonth, isWithinInterval } from 'date-fns'
 
 const props = defineProps<{
   date: number
@@ -15,6 +15,9 @@ const isStart = computed(() => start.value && isSameDay(start.value, props.date)
 const isEnd = computed(() => end.value && isSameDay(end.value, props.date))
 const isOddMonth = computed(() => getMonth(props.date) % 2 === 0)
 
+const includedPlans = computed(() => Array.from(plans.value.values()).filter(
+  plan => plan.start && plan.end && isWithinInterval(props.date, { start: plan.start, end: plan.end })
+))
 
 const selectedDays = computed(() => {
   const inRangeDays = start.value && end.value ? eachDayOfInterval({
@@ -36,10 +39,7 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
   <div
     ref="nodeRef"
     :id="String(info.id)"
-    :class="[{
-      // 'bg-gray-700': info.selected,
-      'peace': info.peace,
-    }]"
+    :class="[{ 'peace': info.peace, }]"
     flex flex-col h-30 cursor-pointer select-none leading-none
     @click="toggleSelect(date)"
     @contextmenu.prevent="toggleMark(date)">
@@ -51,12 +51,14 @@ watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
       <span v-if="info.tip" text-2>({{ info.tip }})</span>
     </div>
     <div v-if="marks.has(date)" i-carbon-star-filled text-yellow-5 />
-    <div v-if="info.selected" :class="['mt-auto mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
+
+    <div mt-auto />
+    <div v-for="plan in includedPlans" :key="plan.id" :class="['mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
       'rounded-l': isStart,
       'rounded-r mr-2': isEnd,
     }]">
       <div v-if="isStart" z-1 y-center>
-        <button i-carbon:close title="Remove" />
+        <button i-carbon:close title="Remove" @click="deletePlan(plan.id)" />
         working: {{ workingDays }}d = {{ workingHours }}h
         peace: {{ peaceDays }}d
       </div>
