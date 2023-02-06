@@ -5,6 +5,8 @@ export const pressedDay = ref<number>()
 export const hoveredDay = ref<number>()
 
 watch([pressedDay, hoveredDay], () => {
+  console.log('ddd');
+  
   if(pressedDay.value && hoveredDay.value && pressedDay.value !== hoveredDay.value) {
     start.value = min([
       pressedDay.value,

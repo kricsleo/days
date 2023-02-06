@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { days, weeks, focusToday, addPrevDays, addNextDays } from '~/composables/days';
+import { weeks, focusToday, daysRef } from '~/composables/days';
 import { observerManager } from '@kricsleo/observer'
+import { ref, onMounted } from 'vue';
+import CalenderDay from './CalenderDay.vue'
 
 const prevLoader = ref<HTMLElement>()
 const nextLoader = ref<HTMLElement>()
@@ -13,14 +15,12 @@ onMounted(() => {
     root: container.value,
   });
   observerManager.observe('loader', prevLoader.value!, () => {
-    addPrevDays(14)
+    daysRef.dayManager.addPrevDays()
     // scroll down a litte so that prev loader can be triggerred again
     container.value!.scrollTop = 10
   })
-  observerManager.observe('loader', nextLoader.value!, () => addNextDays(14))
-  return () => {
-    observerManager.deleteObserver('loader')
-  }
+  observerManager.observe('loader', nextLoader.value!, () => daysRef.dayManager.addNextDays())
+  return () => observerManager.deleteObserver('loader')
 })
 </script>
 
@@ -38,10 +38,9 @@ onMounted(() => {
       <div h-1px ref="prevLoader" />
       <div grid="~ cols-7">
         <CalenderDay
-          v-for="[date, info] in days.days.entries()"
-          :key="info.id"
-          :date="date"
-          :info="info"
+          v-for="day in daysRef.dayManager.days"
+          :key="day.id"
+          :day="day"
           class="day" />
       </div>
       <div h-1px ref="nextLoader" />

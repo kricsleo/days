@@ -1,43 +1,9 @@
 import { expect, test } from 'vitest'
-import { getNearbyDays, isPeaceDay } from '../src/composables/days'
+import { isOffDay } from '../src/composables/days'
 import { holidays, isChineseHoliday, isChineseWorkingDay } from '../src/composables/chinese-holidays'
 import { isWeekend } from 'date-fns'
 
-const date = new Date(2022, 9, 19)
-
 test('days', () => {
-  expect(getNearbyDays(date, 1, 1)).toMatchInlineSnapshot(`
-    Map {
-      2022-10-17T16:00:00.000Z => {
-        "current": false,
-        "marked": false,
-        "peace": false,
-        "selected": false,
-        "tip": "",
-        "today": false,
-        "work": true,
-      },
-      2022-10-18T16:00:00.000Z => {
-        "current": false,
-        "marked": false,
-        "peace": false,
-        "selected": false,
-        "tip": "",
-        "today": false,
-        "work": true,
-      },
-      2022-10-19T16:00:00.000Z => {
-        "current": false,
-        "marked": false,
-        "peace": false,
-        "selected": false,
-        "tip": "",
-        "today": true,
-        "work": true,
-      },
-    }
-  `)
-
   expect(holidays.slice(0, 2)).toMatchInlineSnapshot(`
     [
       {
@@ -58,7 +24,7 @@ test('days', () => {
     ]
   `)
 
-  expect(isPeaceDay(new Date('2022-10-08'))).toMatchInlineSnapshot('false')
+  expect(isOffDay(new Date('2022-10-08'))).toMatchInlineSnapshot('false')
   expect(isChineseHoliday(new Date('2022-10-08'))).toMatchInlineSnapshot('false')
   expect(isChineseWorkingDay(new Date('2022-10-08'))).toMatchInlineSnapshot('true')
   expect(isWeekend(new Date('2022-10-08'))).toMatchInlineSnapshot('true')

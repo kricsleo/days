@@ -1,66 +1,78 @@
 <script setup lang="ts">
-import { Day, toggleSelect, toggleMark, start, end, marks, current, hours, getDay, plans, deletePlan } from '~/composables/days';
-import { pressedDay, hoveredDay } from '~/composables/hover-select';
-import { eachDayOfInterval, format, getMonth, isBefore, isSameDay, isSameMonth, isWithinInterval } from 'date-fns'
+import { Day, planRef, toggleMark, marks } from '~/composables/days';
+import { format, getMonth, isSameDay, isWithinInterval, max, min } from 'date-fns'
+import { useMousePressed, useElementHover } from '@vueuse/core';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps<{
-  date: number
-  info: Day
+  day: Day
 }>()
 
 const nodeRef = ref<HTMLDivElement>()
 const { pressed } = useMousePressed({target: nodeRef})
 const hovered = useElementHover(nodeRef)
-const isStart = computed(() => start.value && isSameDay(start.value, props.date))
-const isEnd = computed(() => end.value && isSameDay(end.value, props.date))
-const isOddMonth = computed(() => getMonth(props.date) % 2 === 0)
+const isOddMonth = computed(() => getMonth(props.day.date) % 2 === 0)
 
-const includedPlans = computed(() => Array.from(plans.value.values()).filter(
-  plan => plan.start && plan.end && isWithinInterval(props.date, { start: plan.start, end: plan.end })
-))
-
-const selectedDays = computed(() => {
-  const inRangeDays = start.value && end.value ? eachDayOfInterval({
-    start: start.value,
-    end: end.value,
-  }) : []
-  return inRangeDays.map(day => getDay(day.valueOf()))
+const currentDayPlans = computed(() => {
+  const includedPlans = planRef.planner.plans.filter(
+    plan => isWithinInterval(props.day.date, { start: plan.start, end: plan.end })
+  )
+  const formattedPlans = includedPlans.map(plan => ({
+    ...plan,
+    isStart: isSameDay(props.day.date, plan.start),
+    isEnd: isSameDay(props.day.date, plan.end),
+  }))
+  return formattedPlans;
 })
-const workingDays = computed(() => selectedDays.value.filter(day => day.work).length)
-const peaceDays = computed(() => selectedDays.value.filter(day => day.peace).length)
-// const inputHours = ref(8)
-const workingHours = computed(() => workingDays.value * hours.value)
 
-watch(pressed, () => pressedDay.value = pressed.value ? props.date : undefined)
-watch(hovered, () => hoveredDay.value = hovered.value ? props.date : undefined)
+
+watch(pressed, () => {
+  if(pressed.value) {
+    const planId = planRef.planner.add(props.day.date, props.day.date)
+    planRef.editingPlanId = planId
+  } else {
+    planRef.editingPlanId = null
+  }
+})
+watch(hovered, () => {
+  if(hovered.value && planRef.editingPlanId) {
+    const editingPlan = planRef.planner.get(planRef.editingPlanId)
+    if(editingPlan) {
+      const start = min([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
+      const end = max([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
+      planRef.planner.delete(planRef.editingPlanId)
+      const planId = planRef.planner.add(start, end)
+      planRef.editingPlanId = planId
+    }
+  }
+})
 </script>
 
 <template>
   <div
     ref="nodeRef"
-    :id="String(info.id)"
-    :class="[{ 'peace': info.peace, }]"
+    :id="String(day.id)"
+    :class="[{ 'peace': day.peace, }]"
     flex flex-col h-30 cursor-pointer select-none leading-none
-    @click="toggleSelect(date)"
-    @contextmenu.prevent="toggleMark(date)">
+    @contextmenu.prevent="toggleMark(day.date)">
     <div inline-block whitespace-nowrap p-2px m-1 :class="[
-      {'border rounded border-yellow': info.current}, 
-      info.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
-      <span text-5>{{ format(date, 'd') }}</span>
-      <span text-2> /{{ format(date, 'L月') }}</span>
-      <span v-if="info.tip" text-2>({{ info.tip }})</span>
+      {'border rounded border-yellow': day.current}, 
+      day.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
+      <span text-5>{{ format(day.date, 'd') }}</span>
+      <span text-2> /{{ format(day.date, 'L月') }}</span>
+      <span v-if="day.tip" text-2>({{ day.tip }})</span>
     </div>
-    <div v-if="marks.has(date)" i-carbon-star-filled text-yellow-5 />
+    <div v-if="marks.has(day.date)" i-carbon-star-filled text-yellow-5 />
 
     <div mt-auto />
-    <div v-for="plan in includedPlans" :key="plan.id" :class="['mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
-      'rounded-l': isStart,
-      'rounded-r mr-2': isEnd,
+    <div v-for="plan in currentDayPlans" :key="plan.id" :class="['mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
+      'rounded-l': plan.isStart,
+      'rounded-r mr-2': plan.isEnd,
     }]">
-      <div v-if="isStart" z-1 y-center>
-        <button i-carbon:close title="Remove" @click="deletePlan(plan.id)" />
-        working: {{ workingDays }}d = {{ workingHours }}h
-        peace: {{ peaceDays }}d
+      <div v-if="plan.isStart" z-1 y-center>
+        <button i-carbon:close title="Remove" @click.stop="planRef.planner.delete(plan.id)" />
+        working: {{ plan.workDays }}d = {{ plan.workHours }}h
+        peace: {{ plan.offDays }}d
       </div>
     </div>
   </div>

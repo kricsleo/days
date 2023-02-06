@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { focusToday, plans, hours } from '~/composables/days'
-const planList = computed(() => {
-  const list = [...plans.value.entries()]
-  const orderedList = [list.shift()!, ...list.reverse()]
-  return orderedList
-})
+import Calender from '~/components/Calender.vue';
+import Header from '~/components/Header.vue';
+import InputHours from '~/components/InputHours.vue';
+import { focusToday, hours } from '~/composables/days'
 </script>
 
 <template>
@@ -15,12 +13,12 @@ const planList = computed(() => {
       <button @click="focusToday" title="Go Today!" color-yellow text-sm border rounded px-4 leading-none>今天</button>
       <InputHours v-model="hours" />
     </div>
-    <section grow-1 overflow-auto>
+    <!-- <section grow-1 overflow-auto>
       <ScheduledCard 
         v-for="([id], idx) in planList" 
         :key="id"
         :planId="id"
         :deletable="idx !== 0" />
-    </section>
+    </section> -->
   </div>
 </template>
