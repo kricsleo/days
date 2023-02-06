@@ -22,7 +22,11 @@ const currentDayPlans = computed(() => {
     isStart: isSameDay(props.day.date, plan.start),
     isEnd: isSameDay(props.day.date, plan.end),
   }))
-  return formattedPlans;
+  const maxLane = formattedPlans.reduce((lane, plan) => Math.max(lane, plan.lane), -1)
+  const filledPlans = Array.from(
+    {length: maxLane + 1}, (_, lane) => formattedPlans.find(plan => plan.lane === lane) || {id: null, lane}
+    ).sort((a, b) => b.lane - a.lane)
+  return filledPlans;
 })
 
 
@@ -65,16 +69,20 @@ watch(hovered, () => {
     <div v-if="marks.has(day.date)" i-carbon-star-filled text-yellow-5 />
 
     <div mt-auto />
-    <div v-for="plan in currentDayPlans" :key="plan.id" :class="['mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
-      'rounded-l': plan.isStart,
-      'rounded-r mr-2': plan.isEnd,
-    }]">
-      <div v-if="plan.isStart" z-1 y-center>
-        <button i-carbon:close title="Remove" @click.stop="planRef.planner.delete(plan.id)" />
-        working: {{ plan.workDays }}d = {{ plan.workHours }}h
-        peace: {{ plan.offDays }}d
+    <template v-for="(plan, idx) in currentDayPlans" :key="idx">
+      <div v-if="plan.id" :class="[
+        'mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
+          'rounded-l': plan.isStart,
+          'rounded-r mr-2': plan.isEnd,
+        }]" :style="{backgroundColor: plan.color}">
+        <div v-if="plan.isStart" z-1 y-center>
+          <button i-carbon:close title="Remove" @click.stop="planRef.planner.delete(plan.id)" />
+          working: {{ plan.workDays }}d = {{ plan.workHours }}h
+          peace: {{ plan.offDays }}d
+        </div>
       </div>
-    </div>
+      <div v-else class="mb-1 h-20% pointer-events-none" />
+    </template>
   </div>
 </template>
 

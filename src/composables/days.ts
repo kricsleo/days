@@ -1,6 +1,6 @@
 import { StorageSerializers, useLocalStorage } from '@vueuse/core'
 import { addDays, addWeeks, differenceInCalendarDays, eachDayOfInterval, endOfWeek, isToday, isWeekend, isWithinInterval, max, min, previousSunday, startOfDay, startOfWeek } from 'date-fns'
-import { ref, reactive, watch, computed, ComputedRef } from 'vue'
+import { ref, reactive, computed, ComputedRef } from 'vue'
 import { isChineseWorkingDay, isChineseHoliday, findChineseDay } from './chinese-holidays'
 
 export interface Day {
@@ -21,7 +21,9 @@ export interface Plan {
   workDays: number
   workHours: ComputedRef<number>
   offDays: number
+  lane: number
   note?: string
+  color: string
 }
 
 export interface Mark {
@@ -78,6 +80,7 @@ class DayManager {
 
 class Planner {
   plans: Plan[] = []
+  avalanes = [0, ]
   constructor() {}
   add(start: number, end: number) {
     const days = eachDayOfInterval({ start, end })
@@ -91,7 +94,9 @@ class Planner {
       end,
       workDays,
       offDays,
-      workHours
+      workHours,
+      lane: 0,
+      color: '#' + Math.floor(Math.random()*16777215).toString(16)
     }
     this.plans.push(plan)
     this.schedule()
@@ -99,12 +104,23 @@ class Planner {
   }
   delete(planId: number) {
     this.plans = this.plans.filter(plan => plan.id !== planId)
+    this.schedule()
   }
   get(planId: number) {
     return this.plans.find(plan => plan.id === planId)
   }
   schedule() {
-    // todo: schedule plans
+    this.plans.forEach((plan, idx) => {
+      const days = eachDayOfInterval({ start: plan.start, end: plan.end})
+      const prevPlans = this.plans.slice(0, idx)
+      const dayLaneStack: boolean[] = []
+      days.forEach(day => {
+        const currentDayPlans = prevPlans.filter(plan => isWithinInterval(day, { start: plan.start, end: plan.end }))
+        currentDayPlans.forEach(plan => dayLaneStack[plan.lane] = true)
+      })
+      const avaliableLane = dayLaneStack.findIndex(lane => !lane)
+      plan.lane = avaliableLane === -1 ? dayLaneStack.length : avaliableLane
+    })
   }
 }
 
