@@ -25,11 +25,17 @@ const currentDayPlans = computed(() => {
   return filledPlans;
 })
 
-function mousedown() {
-  const newPlanId = planRef.planner.add(props.day.date, props.day.date)
+function mousedown(event: MouseEvent) {
+  if(event.button === 2) {
+    return
+  }
+  const newPlanId = planRef.planner.add(props.day.date, props.day.date, props.day.date)
   planRef.editingPlanId = newPlanId
 }
-function mouseup() {
+function mouseup(event: MouseEvent) {
+  if(event.button === 2) {
+    return
+  }
   planRef.editingPlanId = null
 }
 function mouseover() {
@@ -38,10 +44,10 @@ function mouseover() {
   }
   const editingPlan = planRef.planner.get(planRef.editingPlanId)
   if(editingPlan) {
-    const start = min([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
-    const end = max([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
+    const start = min([props.day.date, editingPlan.entry]).valueOf()
+    const end = max([props.day.date, editingPlan.entry]).valueOf()
     planRef.planner.delete(planRef.editingPlanId)
-    const newPlanId = planRef.planner.add(start, end)
+    const newPlanId = planRef.planner.add(start, end, editingPlan.entry)
     planRef.editingPlanId = newPlanId
   }
 }
@@ -51,33 +57,42 @@ function mouseover() {
   <div
     :id="String(day.id)"
     :class="[{ 'peace': day.peace, }]"
-    flex flex-col h-35 cursor-pointer select-none leading-none
+    flex flex-col h-50 cursor-pointer select-none leading-none
     @contextmenu.prevent="toggleMark(day.date)"
     @mousedown="mousedown"
     @mouseup="mouseup"
     @mouseover="mouseover">
 
-    <div inline-block whitespace-nowrap p-2px m-1 :class="[
-      {'border rounded border-yellow': day.current}, 
-      day.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
-      <span text-5>{{ format(day.date, 'd') }}</span>
-      <span text-2> /{{ format(day.date, 'L月') }}</span>
-      <span v-if="day.tip" text-2>({{ day.tip }})</span>
+    <div y-center>
+      <div mr-auto grow-0 whitespace-nowrap p-2px m-1 :class="[
+        {'border rounded border-yellow': day.current}, 
+        day.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
+        <span text-5>{{ format(day.date, 'd') }}</span>
+        <span text-2> /{{ format(day.date, 'L月') }}</span>
+        <span v-if="day.tip" text-2>({{ day.tip }})</span>
+      </div>
+      <div v-if="marks.has(day.date)" i-carbon-star-filled text-yellow-5 mr-1 />
     </div>
-    <div v-if="marks.has(day.date)" i-carbon-star-filled text-yellow-5 />
 
     <div mt-auto />
-    <template v-for="(plan, idx) in currentDayPlans" :key="idx">
+    <template v-for="plan in currentDayPlans" :key="plan.id">
       <div v-if="plan.id" :class="[
-        'mb-1 h-5 whitespace-nowrap overflow-hidden bg-sky-5 text-light y-center px-2', {
+        'mb-1 h-5 shrink-0 whitespace-nowrap overflow-hidden text-light duration-100 y-center', {
           'rounded-l': plan.isStart,
           'rounded-r mr-2': plan.isEnd,
-        }]" :style="{backgroundColor: plan.color}">
-        <div v-if="plan.isStart" z-1 y-center>
-          <button i-carbon:close title="delete" @mousedown.stop="planRef.planner.delete(plan.id)" />
-          working: {{ plan.workDays }}d = {{ plan.workHours }}h
-          peace: {{ plan.offDays }}d
-        </div>
+        }, plan.id === planRef.highlightPlanId ? 'op-100 scale-108 origin-left' : 'op-80' ]" :style="{backgroundColor: plan.color}" 
+        @mousedown.stop="noop"
+        @mouseover="planRef.highlightPlanId = plan.id"
+        @mouseleave="planRef.highlightPlanId = null">
+        <template v-if="plan.isStart">
+          <button title="delete" class="shrink-0 self-stretch bg-red" @mousedown.stop="planRef.planner.delete(plan.id)">
+            <div i-carbon:close />
+          </button>
+          <div class="text-sm px-1px font-mono y-center">
+            <div i-carbon:timer />
+            {{ plan.workDays }}d({{ plan.workHours }}h)
+          </div>
+        </template>
       </div>
       <div v-else class="mb-1 h-5 pointer-events-none" />
     </template>

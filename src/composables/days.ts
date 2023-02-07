@@ -18,6 +18,7 @@ export interface Plan {
   id: number
   start: number
   end: number
+  entry: number
   workDays: number
   workHours: ComputedRef<number>
   offDays: number
@@ -79,26 +80,28 @@ class DayManager {
 }
 
 class Planner {
-  colors = ['#06b6d48', '#14b8a68', '#a855f78', '#ec48998']
+  colors = ['#ec4899', '#8b5cf6', '#3b82f6', '#059669', '#d97706', '#0f766e', '#15803d']
   plans: Plan[] = []
   avalanes = [0, ]
   constructor() {}
-  add(start: number, end: number) {
+  add(start: number, end: number, entry: number = start) {
     const days = eachDayOfInterval({ start, end })
     const workDays = days.filter(day => isWorkDay(day)).length
     const workHours = computed(() => workDays * hours.value)
     const offDays =  days.length - workDays
     const id = Date.now()
-    // const color = this.colors[this.plans.length % this.colors.length]
+    const color = this.colors[this.plans.length % this.colors.length]
     const plan = {
       id,
+      entry,
       start,
       end,
       workDays,
       offDays,
       workHours,
       lane: 0,
-      color: '#' + Math.floor(Math.random()*16777215).toString(16)
+      color,
+      // color: '#' + Math.floor(Math.random()*16777215).toString(16)
     }
     this.plans.push(plan)
     this.schedule()
@@ -132,7 +135,8 @@ export const daysRef = reactive({
 
 export const planRef = reactive({
   planner: new Planner(),
-  editingPlanId: null as null | number
+  editingPlanId: null as null | number,
+  highlightPlanId: null as null | number
 })
 
 export function toggleMark(day: number) {
