@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { Day, planRef, toggleMark, marks } from '~/composables/days';
 import { format, getMonth, isSameDay, isWithinInterval, max, min } from 'date-fns'
-import { useMousePressed, useElementHover } from '@vueuse/core';
-import { ref, computed, watch } from 'vue';
+import { computed } from 'vue';
+import { noop } from 'unocss';
 
 const props = defineProps<{
   day: Day
 }>()
 
-const nodeRef = ref<HTMLDivElement>()
-const { pressed } = useMousePressed({target: nodeRef})
-const hovered = useElementHover(nodeRef)
 const isOddMonth = computed(() => getMonth(props.day.date) % 2 === 0)
-
 const currentDayPlans = computed(() => {
   const includedPlans = planRef.planner.plans.filter(
     plan => isWithinInterval(props.day.date, { start: plan.start, end: plan.end })
@@ -29,36 +25,38 @@ const currentDayPlans = computed(() => {
   return filledPlans;
 })
 
-
-watch(pressed, () => {
-  if(pressed.value) {
-    const planId = planRef.planner.add(props.day.date, props.day.date)
-    planRef.editingPlanId = planId
-  } else {
-    planRef.editingPlanId = null
+function mousedown() {
+  const newPlanId = planRef.planner.add(props.day.date, props.day.date)
+  planRef.editingPlanId = newPlanId
+}
+function mouseup() {
+  planRef.editingPlanId = null
+}
+function mouseover() {
+  if(!planRef.editingPlanId) {
+    return
   }
-})
-watch(hovered, () => {
-  if(hovered.value && planRef.editingPlanId) {
-    const editingPlan = planRef.planner.get(planRef.editingPlanId)
-    if(editingPlan) {
-      const start = min([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
-      const end = max([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
-      planRef.planner.delete(planRef.editingPlanId)
-      const planId = planRef.planner.add(start, end)
-      planRef.editingPlanId = planId
-    }
+  const editingPlan = planRef.planner.get(planRef.editingPlanId)
+  if(editingPlan) {
+    const start = min([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
+    const end = max([props.day.date, editingPlan.start, editingPlan.end]).valueOf()
+    planRef.planner.delete(planRef.editingPlanId)
+    const newPlanId = planRef.planner.add(start, end)
+    planRef.editingPlanId = newPlanId
   }
-})
+}
 </script>
 
 <template>
   <div
-    ref="nodeRef"
     :id="String(day.id)"
     :class="[{ 'peace': day.peace, }]"
-    flex flex-col h-30 cursor-pointer select-none leading-none
-    @contextmenu.prevent="toggleMark(day.date)">
+    flex flex-col h-35 cursor-pointer select-none leading-none
+    @contextmenu.prevent="toggleMark(day.date)"
+    @mousedown="mousedown"
+    @mouseup="mouseup"
+    @mouseover="mouseover">
+
     <div inline-block whitespace-nowrap p-2px m-1 :class="[
       {'border rounded border-yellow': day.current}, 
       day.current ? 'text-yellow-5' : isOddMonth ? 'text-rose' : 'text-emerald-5']">
@@ -71,18 +69,19 @@ watch(hovered, () => {
     <div mt-auto />
     <template v-for="(plan, idx) in currentDayPlans" :key="idx">
       <div v-if="plan.id" :class="[
-        'mb-1 h-20% whitespace-nowrap bg-sky-5 text-light y-center px-2', {
+        'mb-1 h-5 whitespace-nowrap overflow-hidden bg-sky-5 text-light y-center px-2', {
           'rounded-l': plan.isStart,
           'rounded-r mr-2': plan.isEnd,
         }]" :style="{backgroundColor: plan.color}">
         <div v-if="plan.isStart" z-1 y-center>
-          <button i-carbon:close title="Remove" @click.stop="planRef.planner.delete(plan.id)" />
+          <button i-carbon:close title="delete" @mousedown.stop="planRef.planner.delete(plan.id)" />
           working: {{ plan.workDays }}d = {{ plan.workHours }}h
           peace: {{ plan.offDays }}d
         </div>
       </div>
-      <div v-else class="mb-1 h-20% pointer-events-none" />
+      <div v-else class="mb-1 h-5 pointer-events-none" />
     </template>
+
   </div>
 </template>
 

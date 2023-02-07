@@ -79,6 +79,7 @@ class DayManager {
 }
 
 class Planner {
+  colors = ['#06b6d48', '#14b8a68', '#a855f78', '#ec48998']
   plans: Plan[] = []
   avalanes = [0, ]
   constructor() {}
@@ -88,6 +89,7 @@ class Planner {
     const workHours = computed(() => workDays * hours.value)
     const offDays =  days.length - workDays
     const id = Date.now()
+    // const color = this.colors[this.plans.length % this.colors.length]
     const plan = {
       id,
       start,
