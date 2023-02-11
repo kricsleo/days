@@ -2,7 +2,6 @@
 import { Day, planRef, toggleMark, marks } from '~/composables/days';
 import { format, getMonth, isSameDay, isWithinInterval, max, min } from 'date-fns'
 import { computed } from 'vue';
-import { noop } from 'unocss';
 
 const props = defineProps<{
   day: Day
@@ -81,7 +80,7 @@ function mouseover() {
           'rounded-l': plan.isStart,
           'rounded-r mr-2': plan.isEnd,
         }, plan.id === planRef.highlightPlanId ? 'op-100 scale-108 origin-left' : 'op-80' ]" :style="{backgroundColor: plan.color}" 
-        @mousedown.stop="noop"
+        @mousedown.stop="() => null"
         @mouseover="planRef.highlightPlanId = plan.id"
         @mouseleave="planRef.highlightPlanId = null">
         <template v-if="plan.isStart">
