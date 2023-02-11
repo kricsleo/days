@@ -1,12 +1,4 @@
-[build.environment]
-  NPM_FLAGS = "--version"
-  NODE_VERSION = "16"
-
-[build]
-  publish = "dist"
-  command = "npx pnpm i && npx pnpm run build"
-
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "https://day.kric.cc"
+  status = 301
