@@ -2,3 +2,4 @@
   from = "/*"
   to = "https://day.kric.cc"
   status = 301
+  force = true
